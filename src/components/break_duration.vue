@@ -1,9 +1,9 @@
 <template>
     <hr />
     <h6>Break Duration</h6>
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" v-model="value.auto_return" />
-        <label class="custom-control-label">auto_return</label>
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" v-model="value.auto_return">
+        <label class="form-check-label">auto_return</label>
     </div>
 
     <div class="input-group">

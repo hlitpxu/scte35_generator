@@ -7,9 +7,9 @@
     <input type="number" class="form-control" v-model="value.event_id" />
   </div>
 
-  <div>
-    <input type="checkbox" class="custom-control-input" v-model="value.splice_cancel">
-    <label class="custom-control-label">splice_cancel</label>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" v-model="value.splice_cancel">
+    <label class="form-check-label">splice_cancel</label>
   </div>
 
   <div v-if="!value.splice_cancel">
@@ -20,28 +20,28 @@
       <input type="number" class="form-control" v-model="value.program_id" />
     </div>
 
-    <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" v-model="value.out_of_network">
-      <label class="custom-control-label">out_of_network</label>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" v-model="value.out_of_network">
+      <label class="form-check-label">out_of_network</label>
     </div>
 
-    <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" v-model="value.duration_flag">
-      <label class="custom-control-label">duration_flag</label>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" v-model="value.duration_flag">
+      <label class="form-check-label">duration_flag</label>
     </div>
 
-    <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" v-model="value.splice_immediate">
-      <label class="custom-control-label">splice_immediate</label>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" v-model="value.splice_immediate">
+      <label class="form-check-label">splice_immediate</label>
     </div>
 
-    <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" v-model="value.program_splice" disabled>
-      <label class="custom-control-label">program_splice</label>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" v-model="value.program_splice" disabled>
+      <label class="form-check-label">program_splice</label>
     </div>
 
     <div v-if="value.program_splice && !value.splice_immediate">
-      <hr/>
+      <hr />
       <SpliceTime v-model="value.splice_time" />
     </div>
 

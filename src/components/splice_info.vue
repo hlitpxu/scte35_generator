@@ -54,12 +54,12 @@ var splice_info = reactive({
                 </div>
                 <!-- command content -->
                 <div v-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.SPLICE_INSERT">
-                    <hr/>
+                    <hr />
                     <SpliceInsert v-model="splice_info.splice_command.data" />
                 </div>
                 <div v-else-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.TIME_SIGNAL">
-                    <hr/>
-                    <TimeSignal v-model="splice_info.splice_command.data"/>
+                    <hr />
+                    <TimeSignal v-model="splice_info.splice_command.data" />
                 </div>
             </div>
             <div class="col-6">
@@ -120,10 +120,10 @@ var splice_info = reactive({
         <!-- debug panel -->
         <div class="row">
             <hr />
-            <div class="col-2">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" v-model="enable_debug">
-                    <label class="custom-control-label">Debug</label>
+            <div class="col-3">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" v-model="enable_debug">
+                    <label class="form-check-label">debug</label>
                 </div>
             </div>
             <div class="col">

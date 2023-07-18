@@ -1,8 +1,8 @@
 <template>
   <h6>Splice Time</h6>
-  <div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" v-model="value.time_specified" />
-    <label class="custom-control-label">time_specified</label>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" v-model="value.time_specified">
+    <label class="form-check-label">time_specified</label>
   </div>
 
   <div v-if="value.time_specified" class="input-group">

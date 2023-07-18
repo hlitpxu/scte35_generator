@@ -85,40 +85,47 @@ const SEGMENTATION_TYPES_VAL = {
         </div>
         <input type="number" class="form-control" v-model="value.event_id" />
     </div>
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" v-model="value.event_cancel" />
-        <label class="custom-control-label">event_cancel</label>
+
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" v-model="value.event_cancel">
+        <label class="form-check-label">event_cancel</label>
     </div>
 
     <div v-show="!value.event_cancel">
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" v-model="value.program_segmentation_flag" />
-            <label class="custom-control-label">program_segmentation_flag</label>
+
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" v-model="value.program_segmentation_flag">
+            <label class="form-check-label">program_segmentation_flag</label>
         </div>
 
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" v-model="value.duration_flag" />
-            <label class="custom-control-label">duration_flag</label>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" v-model="value.duration_flag">
+            <label class="form-check-label">duration_flag</label>
         </div>
 
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" v-model="value.delivery_not_restricted_flag" />
-            <label class="custom-control-label">delivery_not_restricted_flag</label>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" v-model="value.delivery_not_restricted_flag">
+            <label class="form-check-label">delivery_not_restricted_flag</label>
         </div>
 
         <div v-show="!value.delivery_not_restricted_flag">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" v-model="value.web_delivery_allowed_flag" />
-                <label class="custom-control-label">web_delivery_allowed_flag</label>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" v-model="value.web_delivery_allowed_flag">
+                <label class="form-check-label">web_delivery_allowed_flag</label>
             </div>
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" v-model="value.no_regional_blackout_flag" />
-                <label class="custom-control-label">no_regional_blackout_flag</label>
+
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" v-model="value.no_regional_blackout_flag">
+                <label class="form-check-label">no_regional_blackout_flag</label>
             </div>
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" v-model="value.archive_allowed_flag" />
-                <label class="custom-control-label">archive_allowed_flag</label>
+
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" v-model="value.archive_allowed_flag">
+                <label class="form-check-label">archive_allowed_flag</label>
             </div>
+
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">device_restrictions</span>
