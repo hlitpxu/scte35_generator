@@ -1,5 +1,4 @@
 <template>
-  <h6>Splice Insert</h6>
   <div class="input-group">
     <div class="input-group-prepend">
       <span class="input-group-text">event_id</span>
@@ -29,6 +28,7 @@
       <input class="form-check-input" type="checkbox" v-model="value.duration_flag">
       <label class="form-check-label">duration_flag</label>
     </div>
+    <BreakDuration v-if="value.duration_flag" v-model="value.break_duration" />
 
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" v-model="value.splice_immediate">
@@ -41,11 +41,8 @@
     </div>
 
     <div v-if="value.program_splice && !value.splice_immediate">
-      <hr />
       <SpliceTime v-model="value.splice_time" />
     </div>
-
-    <BreakDuration v-if="value.duration_flag" v-model="value.break_duration" />
   </div>
 </template>
 

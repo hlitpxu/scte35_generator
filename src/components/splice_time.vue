@@ -1,5 +1,4 @@
 <template>
-  <h6>Splice Time</h6>
   <div class="form-check form-switch">
     <input class="form-check-input" type="checkbox" v-model="value.time_specified">
     <label class="form-check-label">time_specified</label>

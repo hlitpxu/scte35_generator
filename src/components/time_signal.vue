@@ -1,5 +1,4 @@
 <template>
-  <h6>Time Signal</h6>
   <SpliceTime v-model="value.splice_time" />
 </template>
   

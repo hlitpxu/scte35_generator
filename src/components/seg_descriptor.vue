@@ -79,90 +79,90 @@ const SEGMENTATION_TYPES_VAL = {
 </script>
 
 <template>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">event_id</span>
-        </div>
-        <input type="number" class="form-control" v-model="value.event_id" />
-    </div>
-
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" v-model="value.event_cancel">
-        <label class="form-check-label">event_cancel</label>
-    </div>
-
-    <div v-show="!value.event_cancel">
-
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" v-model="value.program_segmentation_flag" disabled>
-            <label class="form-check-label">program_segmentation_flag</label>
-        </div>
-
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" v-model="value.duration_flag">
-            <label class="form-check-label">duration_flag</label>
-        </div>
-
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" v-model="value.delivery_not_restricted_flag">
-            <label class="form-check-label">delivery_not_restricted_flag</label>
-        </div>
-
-        <div v-show="!value.delivery_not_restricted_flag">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" v-model="value.web_delivery_allowed_flag">
-                <label class="form-check-label">web_delivery_allowed_flag</label>
-            </div>
-
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" v-model="value.no_regional_blackout_flag">
-                <label class="form-check-label">no_regional_blackout_flag</label>
-            </div>
-
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" v-model="value.archive_allowed_flag">
-                <label class="form-check-label">archive_allowed_flag</label>
-            </div>
-
+    <div class="row gy-2">
+        <div class="col-12">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">device_restrictions</span>
+                    <span class="input-group-text">event_id</span>
                 </div>
-                <input type="number" class="form-control" v-model="value.device_restrictions" />
+                <input type="number" class="form-control" v-model="value.event_id" />
             </div>
-        </div>
 
-        <div v-show="value.duration_flag">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">duration</span>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" v-model="value.event_cancel">
+                <label class="form-check-label">event_cancel</label>
+            </div>
+
+            <div v-show="!value.event_cancel">
+
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" v-model="value.program_segmentation_flag" disabled>
+                    <label class="form-check-label">program_segmentation_flag</label>
                 </div>
-                <input type="number" class="form-control" v-model="value.duration" />
+
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" v-model="value.duration_flag">
+                    <label class="form-check-label">duration_flag</label>
+                </div>
+                <div v-show="value.duration_flag">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">duration</span>
+                        </div>
+                        <input type="number" class="form-control" v-model="value.duration" />
+                    </div>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" v-model="value.delivery_not_restricted_flag">
+                    <label class="form-check-label">delivery_not_restricted_flag</label>
+                </div>
+
+                <div v-show="!value.delivery_not_restricted_flag">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" v-model="value.web_delivery_allowed_flag">
+                        <label class="form-check-label">web_delivery_allowed_flag</label>
+                    </div>
+
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" v-model="value.no_regional_blackout_flag">
+                        <label class="form-check-label">no_regional_blackout_flag</label>
+                    </div>
+
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" v-model="value.archive_allowed_flag">
+                        <label class="form-check-label">archive_allowed_flag</label>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">device_restrictions</span>
+                        </div>
+                        <input type="number" class="form-control" v-model="value.device_restrictions" />
+                    </div>
+                </div>
+
+                <!--  set to 0 now
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">upid_type</span>
+                    </div>
+                    <input type="number" class="form-control" v-model="value.upid_type" />
+                </div> -->
             </div>
         </div>
-
-        <!--  set to 0 now
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">upid_type</span>
-            </div>
-            <input type="number" class="form-control" v-model="value.upid_type" />
-        </div> -->
-
-        <hr />
-        <div class="row">
-            <div class="col-4">
-                <label class="input-group-text" for="descritor_type">segment_type</label>
-            </div>
-            <div class="col-8">
-                <select class="form-select form-select" v-model="value.type_id">
-                    <option v-for="type, index in SEGMENTATION_TYPES_VAL" :key="index" :value="type">
-                        {{ SEGMENTATION_TYPES[index] }}</option>
-                </select>
-            </div>
+        <div class="col-4">
+            <label class="input-group-text" for="descritor_type">segment_type</label>
         </div>
+        <div class="col-8">
+            <select class="form-select form-select" v-model="value.type_id">
+                <option v-for="type, index in SEGMENTATION_TYPES_VAL" :key="index" :value="type">
+                    {{ SEGMENTATION_TYPES[index] }}</option>
+            </select>
+        </div>
+
     </div>
 </template>
     

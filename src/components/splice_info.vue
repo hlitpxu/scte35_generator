@@ -183,21 +183,21 @@ function copy_to_clipboard(text) {
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Descriptor Tag</th>
-                                <th>Action</th>
+                                <th style="position: sticky; top:0;">Descriptor</th>
+                                <th style="position: sticky; top:0;">Delete</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(d, i) in splice_info.descriptors" :key="i">
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#descriptorView" @click="sendDesc(splice_info.descriptors[i])">
                                         {{ DESCRIPTOR_VAL_TO_STR[d.tag] }}
                                     </button>
 
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-danger"
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
                                         @click="splice_info.descriptors.splice(i, 1)">Delete</button>
                                 </td>
                             </tr>
@@ -207,49 +207,50 @@ function copy_to_clipboard(text) {
             </div>
         </div>
         <br />
-        <div class="row">
+        <div class="row gy-2">
             <hr />
-            <div class="row">
+            <div class="col-12">
                 <div>
-                    <button type="button" class="btn btn-outline-primary" @click="get_binary(splice_info)">Generate
+                    <button type="button" class="btn btn-outline-primary btn-lg" @click="get_binary(splice_info)">Generate
                         SCTE35</button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">SCTE35 Binary</span>
-                        </div>
-                        <textarea class="form-control" aria-label="With textarea" rows="1" v-model="binary_str"
-                            disabled></textarea>
+
+            <div class="col-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">SCTE35 Binary</span>
                     </div>
                 </div>
-                <div class="col-1">
-                    <button type="button" class="btn btn-outline-primary"
-                        @click="copy_to_clipboard(binary_str)">Copy</button>
-                </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">SCTE35 Base64</span>
-                        </div>
-                        <textarea class="form-control" aria-label="With textarea" rows="1" v-model="binary_base64"
-                            disabled></textarea>
+            <div class="col-9">
+                <textarea class="form-control" aria-label="With textarea" rows="2" v-model="binary_str" disabled></textarea>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-outline-primary" @click="copy_to_clipboard(binary_str)">Copy</button>
+            </div>
+
+            <div class="col-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">SCTE35 Base64</span>
                     </div>
                 </div>
-                <div class="col-1">
-                    <button type="button" class="btn btn-outline-primary"
-                        @click="copy_to_clipboard(binary_base64)">Copy</button>
-                </div>
             </div>
+            <div class="col-9">
+                <textarea class="form-control" aria-label="With textarea" rows="" v-model="binary_base64"
+                    disabled></textarea>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-outline-primary"
+                    @click="copy_to_clipboard(binary_base64)">Copy</button>
+            </div>
+
         </div>
 
         <!-- debug panel -->
+        <hr />
         <div class="row">
-            <hr />
             <div class="col-3">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" v-model="enable_debug">
@@ -258,7 +259,7 @@ function copy_to_clipboard(text) {
             </div>
             <div class="col">
                 <div v-show="enable_debug">
-                    {{ splice_info }}
+                    <pre>{{ splice_info }}</pre>
                 </div>
             </div>
         </div>
