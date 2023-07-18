@@ -94,7 +94,7 @@ const SEGMENTATION_TYPES_VAL = {
     <div v-show="!value.event_cancel">
 
         <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" v-model="value.program_segmentation_flag">
+            <input class="form-check-input" type="checkbox" v-model="value.program_segmentation_flag" disabled>
             <label class="form-check-label">program_segmentation_flag</label>
         </div>
 
@@ -179,7 +179,7 @@ export default {
                     v.init = true;
                     v.event_id = 1;
                     v.event_cancel = false;
-                    v.program_segmentation_flag = false;
+                    v.program_segmentation_flag = true;
                     v.duration_flag = false;
                     v.delivery_not_restricted_flag = false;
                     v.web_delivery_allowed_flag = false;
@@ -187,7 +187,7 @@ export default {
                     v.archive_allowed_flag = false;
                     v.device_restrictions = 0;
                     // todo: component
-                    v.duration = 0;
+                    v.break_duration = {};
                     v.upid_type = 0;
                     // todo: upid
                     v.type_id = 0;
@@ -203,5 +203,74 @@ export default {
             },
         },
     },
+    get_seg_descriptor_binary(data) {
+        var rv = [0x02, 0x00, 0x43, 0x55, 0x45, 0x49];
+
+        var offset = rv.length;
+        rv.push(0x00, 0x00, 0x00, 0x00);
+        rv[offset] |= (data.event_id & 0xFF000000) >>> 24;
+        rv[offset + 1] |= (data.event_id & 0xFF0000) >>> 16;
+        rv[offset + 2] |= (data.event_id & 0xFF00) >>> 8;
+        rv[offset + 3] |= (data.event_id & 0xFF);
+
+        offset = rv.length;
+        rv.push(0x00);
+        if (data.event_cancel) {
+            rv[offset] |= 0x80;
+        } else {
+            offset = rv.length;
+            rv.push(0x00);
+            if (data.program_segmentation_flag) {
+                rv[offset] |= 0x80;
+            }
+            if (data.duration_flag) {
+                rv[offset] |= 0x40
+            }
+            if (data.delivery_not_restricted_flag) {
+                rv[offset] |= 0x20;
+            } else {
+                if (data.web_delivery_allowed_flag) {
+                    rv[offset] |= 0x10;
+                }
+                if (data.no_regional_blackout_flag) {
+                    rv[offset] |= 0x08;
+                }
+                if (data.archive_allowed_flag) {
+                    rv[offset] |= 0x04;
+                }
+                rv[offset] |= (data.device_restrictions & 0x03);
+            }
+
+            // program_segmentation_flag hardcode to true now
+
+            if (data.duration_flag) {
+                offset = rv.length;
+                rv.push(0x00, 0x00, 0x00, 0x00, 0x00);
+                rv[offset] |= (data.duration & 0xFF00000000) >>> 32;
+                rv[offset + 1] |= (data.duration & 0xFF000000) >>> 24;
+                rv[offset + 2] |= (data.duration & 0xFF0000) >>> 16;
+                rv[offset + 3] |= (data.duration & 0xFF00) >>> 8;
+                rv[offset + 4] |= (data.duration & 0xFF);
+            }
+
+            // upid type and length set to 0
+            rv.push(0x00, 0x00);
+
+            rv.push(data.type_id & 0xFF);
+            rv.push(0x00, 0x00);
+
+            switch (data.type_id) {
+                case 0x34:
+                case 0x36:
+                case 0x38:
+                case 0x3A:
+                    rv.push(0x00, 0x00);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return rv
+    }
 };
 </script>

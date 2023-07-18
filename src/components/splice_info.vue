@@ -46,6 +46,7 @@ const binary_base64 = ref("");
 
 function get_binary(data) {
     var binary = [0xFC, 0x0F, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+    var offset = 0;
 
     // command part
     binary.push(data.splice_command.type);
@@ -65,11 +66,26 @@ function get_binary(data) {
     binary[12] |= (splice_command_length & 0xFF);
 
     // descriptor part
-    // var offset = binary.length;
+    offset = binary.length;
     binary.push(0x00, 0x00);
+    var desc_length = 0;
+    for (var i = 0; i < data.descriptors.length; ++i) {
+        var d = data.descriptors[i];
+        switch (d.tag) {
+            case DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC:
+                result = SegmentationDescriptor.get_seg_descriptor_binary(d.data);
+                desc_length += result.length;
+                binary.push(...result);
+                break;
+            default:
+                break;
+        }
+    }
+    binary[offset] |= (desc_length & 0xFF00) >>> 8;
+    binary[offset+1] |= (desc_length & 0xFF);
 
     // tail
-    var offset = binary.length;
+    offset = binary.length;
     var crc_val = crc32mpeg2(binary) >>> 0;
     splice_info.crc = crc_val;
     binary.push(0x00, 0x00, 0x00, 0x00);
