@@ -1,7 +1,7 @@
 <template>
   <hr />
   <h6>Splice Time</h6>
-  <div class="cuscom-control custom-checkbox">
+  <div class="custom-control custom-checkbox">
     <input type="checkbox" class="custom-control-input" v-model="value.time_specified" />
     <label class="custom-control-label">time_specified</label>
   </div>

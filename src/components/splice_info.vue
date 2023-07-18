@@ -7,18 +7,27 @@ const COMMAND_TYPES = {
     TIME_SIGNAL: "time_signal",
 };
 
-const DESCRIPTOR_TYPES = {
-    SEGMENTATION_DESC: "segmentation_descriptor",
+const COMMAND_TYPES_VAL = {
+    SPLICE_INSERT: 0x05,
+    TIME_SIGNAL: 0x06,
+};
+
+const DESCRIPTOR_TYPES_VAL = {
+    SEGMENTATION_DESC: 0x02,
+};
+
+const DESCRIPTOR_VAL_TO_STR = {
+    2: "segmentation_descriptor",
 }
 
 var enable_debug = ref(true);
 var splice_info = reactive({
     splice_command: {
-        type: COMMAND_TYPES.SPLICE_INSERT,
+        type: COMMAND_TYPES_VAL.SPLICE_INSERT,
         data: {},
     },
     new_descriptor: {
-        tag: DESCRIPTOR_TYPES.SEGMENTATION_DESC,
+        tag: DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC,
         data: {
             init: false,
         }
@@ -38,13 +47,13 @@ var splice_info = reactive({
                         <label class="input-group-text" for="select_command">Command</label>
                     </div>
                     <select class="custom-select" id="select_command" v-model="splice_info.splice_command.type">
-                        <option v-for="(type, index) in COMMAND_TYPES" :key="index" :value="type">
+                        <option v-for="(type, index) in COMMAND_TYPES" :key="index" :value="COMMAND_TYPES_VAL[index]">
                             {{ COMMAND_TYPES[index] }}
                         </option>
                     </select>
                 </div>
                 <!-- command content -->
-                <div v-if="splice_info.splice_command.type == COMMAND_TYPES.SPLICE_INSERT">
+                <div v-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.SPLICE_INSERT">
                     <SpliceInsert v-model="splice_info.splice_command.data" />
                 </div>
             </div>
@@ -55,15 +64,16 @@ var splice_info = reactive({
                         <label class="input-group-text" for="descritor_type">Descriptor Tag</label>
                     </div>
                     <select class="custom-select" id="descritor_type" v-model="splice_info.new_descriptor.tag">
-                        <option v-for="(type, index) in DESCRIPTOR_TYPES" :key="index" :value="type">
-                            {{ DESCRIPTOR_TYPES[index] }}
+                        <option v-for="(type, index) in DESCRIPTOR_TYPES_VAL" :key="index" :value="type">
+                            {{ DESCRIPTOR_VAL_TO_STR[type] }}
                         </option>
                     </select>
                 </div>
 
                 <div>
                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                        data-bs-target="#descriptorView" @click="splice_info.new_descriptor.data.init=false;sendDesc(splice_info.new_descriptor, true)">Add</button>
+                        data-bs-target="#descriptorView"
+                        @click="splice_info.new_descriptor.data.init = false; sendDesc(splice_info.new_descriptor, true)">Add</button>
                 </div>
 
                 <!-- decriptor display -->
@@ -80,7 +90,7 @@ var splice_info = reactive({
                                 <td>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#descriptorView" @click="sendDesc(splice_info.descriptors[i])">
-                                        {{ d.tag }}
+                                        {{ DESCRIPTOR_VAL_TO_STR[d.tag] }}
                                     </button>
 
                                 </td>
