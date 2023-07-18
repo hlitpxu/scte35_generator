@@ -1,39 +1,50 @@
 <template>
   <h6>Splice Insert</h6>
-  <div v-for="(v, k) in value.inputs" :key="k" class="input-group">
+  <div class="input-group">
     <div class="input-group-prepend">
-      <span class="input-group-text">{{ k }}</span>
+      <span class="input-group-text">event_id</span>
     </div>
-    <input type="number" class="form-control" v-model="value.inputs[k]" />
+    <input type="number" class="form-control" v-model="value.event_id" />
   </div>
 
-  <div class="custom-control custom-checkbox" v-for="(v, k) in value.flags" :key="k">
-    <input type="checkbox" class="custom-control-input" v-model="value.flags[k]">
-    <label class="custom-control-label">{{ k }}</label>
+  <div>
+    <input type="checkbox" class="custom-control-input" v-model="value.splice_cancel">
+    <label class="custom-control-label">splice_cancel</label>
   </div>
 
-  <div v-if="!value.flags.splice_cancel">
-    <div v-for="(v, k) in value.optional.inputs" :key="k" class="input-group">
+  <div v-if="!value.splice_cancel">
+    <div class="input-group">
       <div class="input-group-prepend">
-        <span class="input-group-text">{{ k }}</span>
+        <span class="input-group-text">program_id</span>
       </div>
-      <input type="number" class="form-control" v-model="value.optional.inputs[k]" />
+      <input type="number" class="form-control" v-model="value.program_id" />
     </div>
 
-    <div class="custom-control custom-checkbox" v-for="(v, k) in value.optional.flags" :key="k">
-      <input type="checkbox" class="custom-control-input" v-model="value.optional.flags[k]">
-      <label class="custom-control-label">{{ k }}</label>
-    </div>
     <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" v-model="value.optional.program_splice" disabled>
+      <input type="checkbox" class="custom-control-input" v-model="value.out_of_network">
+      <label class="custom-control-label">out_of_network</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" v-model="value.duration_flag">
+      <label class="custom-control-label">duration_flag</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" v-model="value.splice_immediate">
+      <label class="custom-control-label">splice_immediate</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" v-model="value.program_splice" disabled>
       <label class="custom-control-label">program_splice</label>
     </div>
 
-    <div v-if="value.optional.program_splice && !value.optional.flags.splice_immediate">
-      <SpliceTime v-model="value.optional.splice_time" />
+    <div v-if="value.program_splice && !value.splice_immediate">
+      <SpliceTime v-model="value.splice_time" />
     </div>
 
-    <BreakDuration v-if="value.optional.flags.duration" v-model="value.optional.break_duration" />
+    <BreakDuration v-if="value.duration_flag" v-model="value.break_duration" />
   </div>
 </template>
 
@@ -52,7 +63,17 @@ export default {
   computed: {
     value: {
       get() {
-        return this.modelValue;
+        var v = this.modelValue;
+        v.event_id = 1;
+        v.splice_cancel = false;
+        v.program_id = 1;
+        v.out_of_network = false;
+        v.duraiton_flag = false;
+        v.splice_immediate = false;
+        v.program_splice = true;
+        v.splice_time = {};
+        v.break_duration = {};
+        return v;
       },
       set(value) {
         this.$emit("upate:modelValue", value);

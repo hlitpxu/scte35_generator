@@ -23,7 +23,10 @@ export default {
   computed: {
     value: {
       get() {
-        return this.modelValue;
+        var v = this.modelValue;
+        v.time_specified = false;
+        v.pts_time = 0;
+        return v;
       },
       set(value) {
         this.$emit("upate:modelValue", value);
