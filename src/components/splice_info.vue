@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from "vue";
-
+import crc32mpeg2 from 'crc/calculators/crc32mpeg2';
 
 const COMMAND_TYPES = {
     SPLICE_INSERT: "splice_insert",
@@ -23,7 +23,7 @@ const DESCRIPTOR_VAL_TO_STR = {
 var enable_debug = ref(true);
 var splice_info = reactive({
     splice_command: {
-        type: COMMAND_TYPES_VAL.SPLICE_INSERT,
+        type: COMMAND_TYPES_VAL.TIME_SIGNAL,
         data: {},
     },
     new_descriptor: {
@@ -34,6 +34,71 @@ var splice_info = reactive({
     },
     descriptors: [],
 });
+
+function to_hex_str(bytes) {
+    return Array.from(bytes, (byte) => {
+        return ('0' + (byte & 0xff).toString(16)).slice(-2);
+    }).join('');
+}
+
+const binary_str = ref("");
+const binary_base64 = ref("");
+
+function get_binary(data) {
+    var binary = [0xFC, 0x0F, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+
+    // command part
+    binary.push(data.splice_command.type);
+    var splice_command_length = 0;
+    switch (data.splice_command.type) {
+        case COMMAND_TYPES_VAL.SPLICE_INSERT:
+            break;
+        case COMMAND_TYPES_VAL.TIME_SIGNAL:
+            var result = TimeSignal.get_time_signal_binary(data.splice_command.data);
+            splice_command_length = result.length;
+            binary.push(...result);
+            break;
+        default:
+            break;
+    }
+    binary[11] |= (splice_command_length & 0xF00) >> 8;
+    binary[12] |= (splice_command_length & 0xFF);
+
+    // descriptor part
+    // var offset = binary.length;
+    binary.push(0x00, 0x00);
+
+    // tail
+    var offset = binary.length;
+    var crc_val = crc32mpeg2(binary) >>> 0;
+    splice_info.crc = crc_val;
+    binary.push(0x00, 0x00, 0x00, 0x00);
+    binary[offset] |= (crc_val & 0xFF000000) >>> 24;
+    binary[offset + 1] |= (crc_val & 0xFF0000) >>> 16;
+    binary[offset + 2] |= (crc_val & 0xFF00) >>> 8;
+    binary[offset + 3] |= (crc_val & 0xFF);
+
+    var section_length = binary.length - 2;
+    binary[1] |= (section_length & 0x0F00) >>> 8;
+    binary[2] |= (section_length & 0xFF);
+
+    binary_str.value = to_hex_str(binary);
+    binary_base64.value = btoa(String.fromCharCode.apply(binary, binary)).replace(/.{76}(?=.)/g, '$&\n');
+}
+
+function copy_to_clipboard(text) {
+    if (!navigator.clipboard) {
+        var copyhelper = document.createElement("input");
+        copyhelper.className = 'copyhelper'
+        document.body.appendChild(copyhelper);
+        copyhelper.value = text;
+        copyhelper.select();
+        document.execCommand("copy");
+        document.body.removeChild(copyhelper);
+    } else {
+        navigator.clipboard.writeText(text);
+    }
+}
 </script>
 
 <template>
@@ -112,8 +177,41 @@ var splice_info = reactive({
         <br />
         <div class="row">
             <hr />
-            <div class="col">
-                Ouput todo
+            <div class="row">
+                <div>
+                    <button type="button" class="btn btn-outline-primary" @click="get_binary(splice_info)">Generate
+                        SCTE35</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">SCTE35 Binary</span>
+                        </div>
+                        <textarea class="form-control" aria-label="With textarea" rows="1" v-model="binary_str"
+                            disabled></textarea>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-outline-primary"
+                        @click="copy_to_clipboard(binary_str)">Copy</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">SCTE35 Base64</span>
+                        </div>
+                        <textarea class="form-control" aria-label="With textarea" rows="1" v-model="binary_base64"
+                            disabled></textarea>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-outline-primary"
+                        @click="copy_to_clipboard(binary_base64)">Copy</button>
+                </div>
             </div>
         </div>
 
