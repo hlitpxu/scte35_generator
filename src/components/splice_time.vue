@@ -1,5 +1,4 @@
 <template>
-  <hr />
   <h6>Splice Time</h6>
   <div class="custom-control custom-checkbox">
     <input type="checkbox" class="custom-control-input" v-model="value.time_specified" />

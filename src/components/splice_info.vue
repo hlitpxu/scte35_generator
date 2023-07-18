@@ -54,7 +54,12 @@ var splice_info = reactive({
                 </div>
                 <!-- command content -->
                 <div v-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.SPLICE_INSERT">
+                    <hr/>
                     <SpliceInsert v-model="splice_info.splice_command.data" />
+                </div>
+                <div v-else-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.TIME_SIGNAL">
+                    <hr/>
+                    <TimeSignal v-model="splice_info.splice_command.data"/>
                 </div>
             </div>
             <div class="col-6">
@@ -152,11 +157,13 @@ var splice_info = reactive({
 
 <script>
 import SpliceInsert from "./splice_insert.vue"
+import TimeSignal from "./time_signal.vue"
 import SegmentationDescriptor from "./seg_descriptor.vue"
 export default {
     name: "SpliceInfo",
     components: {
         SpliceInsert,
+        TimeSignal,
         SegmentationDescriptor,
     },
     data: function () {

@@ -41,6 +41,7 @@
     </div>
 
     <div v-if="value.program_splice && !value.splice_immediate">
+      <hr/>
       <SpliceTime v-model="value.splice_time" />
     </div>
 
