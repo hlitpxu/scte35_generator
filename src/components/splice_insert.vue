@@ -43,6 +43,13 @@
     <div v-if="value.program_splice && !value.splice_immediate">
       <SpliceTime v-model="value.splice_time" />
     </div>
+
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">unique_id</span>
+      </div>
+      <input type="number" class="form-control" v-model="value.unique_id" />
+    </div>
   </div>
 </template>
 
@@ -66,17 +73,58 @@ export default {
         v.splice_cancel = false;
         v.program_id = 1;
         v.out_of_network = false;
-        v.duraiton_flag = false;
+        v.duration_flag = false;
         v.splice_immediate = false;
         v.program_splice = true;
         v.splice_time = {};
         v.break_duration = {};
+        v.unique_id = 1;
         return v;
       },
       set(value) {
         this.$emit("upate:modelValue", value);
       },
     },
+  },
+  get_binary(data) {
+    var rv = [0x00, 0x00, 0x00, 0x00, 0x00];
+    rv[0] |= (data.event_id & 0xFF000000) >>> 24;
+    rv[1] |= (data.event_id & 0xFF0000) >>> 16;
+    rv[2] |= (data.event_id & 0xFF00) >>> 8;
+    rv[3] |= (data.event_id & 0xFF);
+    if (data.splice_cancel) {
+      rv[4] |= 0x80;
+    } else {
+      var offset = rv.length;
+      rv.push(0x00);
+      if (data.out_of_network) {
+        rv[offset] |= 0x80;
+      }
+      if (data.program_splice) {
+        rv[offset] |= 0x40;
+      }
+      if (data.duration_flag) {
+        rv[offset] |= 0x20;
+      }
+      if (data.splice_immediate) {
+        rv[offset] |= 0x10;
+      }
+      if (data.program_splice && !data.splice_immediate) {
+        rv.push(...SpliceTime.get_binary(data.splice_time));
+      }
+      if (!data.program_splice) {
+        // not support yet
+      }
+      if (data.duration_flag) {
+        rv.push(...BreakDuration.get_binary(data.break_duration));
+      }
+
+      offset = rv.length;
+      rv.push(0x00, 0x00, 0x00, 0x00);
+      rv[offset] |= (data.unique_id & 0xFF00) >>> 8;
+      rv[offset+1] |= (data.unique_id & 0xFF);
+    }
+    return rv;
   },
 };
 </script>

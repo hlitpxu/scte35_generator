@@ -188,7 +188,7 @@ export default {
                     v.archive_allowed_flag = false;
                     v.device_restrictions = 0;
                     // todo: component
-                    v.break_duration = {};
+                    v.duration = 0;
                     v.upid_type = 0;
                     // todo: upid
                     v.type_id = 0;
@@ -204,7 +204,7 @@ export default {
             },
         },
     },
-    get_seg_descriptor_binary(data) {
+    get_binary(data) {
         var rv = [0x02, 0x00, 0x43, 0x55, 0x45, 0x49];
 
         var offset = rv.length;
@@ -270,6 +270,8 @@ export default {
                 default:
                     break;
             }
+
+            rv[1] |= (rv.length - 2) & 0xFF;
         }
         return rv
     }

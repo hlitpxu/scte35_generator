@@ -31,7 +31,7 @@ export default {
       },
     },
   },
-  get_splice_time_binary(data) {
+  get_binary(data) {
     var rv = [0x00];
     if (data.time_specified) {
       rv[0] |= 0x80;

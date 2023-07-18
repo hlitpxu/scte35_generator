@@ -23,7 +23,7 @@ const DESCRIPTOR_VAL_TO_STR = {
 var enable_debug = ref(true);
 var splice_info = reactive({
     splice_command: {
-        type: COMMAND_TYPES_VAL.TIME_SIGNAL,
+        type: COMMAND_TYPES_VAL.SPLICE_INSERT,
         data: {},
     },
     new_descriptor: {
@@ -62,11 +62,15 @@ function get_binary(data) {
     // command part
     binary.push(data.splice_command.type);
     var splice_command_length = 0;
+    var result = [];
     switch (data.splice_command.type) {
         case COMMAND_TYPES_VAL.SPLICE_INSERT:
+            result = SpliceInsert.get_binary(data.splice_command.data);
+            splice_command_length = result.length;
+            binary.push(...result);
             break;
         case COMMAND_TYPES_VAL.TIME_SIGNAL:
-            var result = TimeSignal.get_time_signal_binary(data.splice_command.data);
+            result = TimeSignal.get_binary(data.splice_command.data);
             splice_command_length = result.length;
             binary.push(...result);
             break;
@@ -84,7 +88,7 @@ function get_binary(data) {
         var d = data.descriptors[i];
         switch (d.tag) {
             case DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC:
-                result = SegmentationDescriptor.get_seg_descriptor_binary(d.data);
+                result = SegmentationDescriptor.get_binary(d.data);
                 desc_length += result.length;
                 binary.push(...result);
                 break;
@@ -250,7 +254,7 @@ function copy_to_clipboard(text) {
 
         <!-- debug panel -->
         <hr />
-        <div class="row">
+        <div v-if="false" class="row">
             <div class="col-3">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" v-model="enable_debug">

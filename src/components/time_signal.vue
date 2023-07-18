@@ -24,8 +24,8 @@ export default {
       },
     },
   },
-  get_time_signal_binary(data) {
-    return SpliceTime.get_splice_time_binary(data.splice_time);
+  get_binary(data) {
+    return SpliceTime.get_binary(data.splice_time);
   }
 };
 </script>

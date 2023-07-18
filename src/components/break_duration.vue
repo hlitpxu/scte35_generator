@@ -31,7 +31,7 @@ export default {
             },
         },
     },
-    get_break_duration_binary(data) {
+    get_binary(data) {
         var rv = [0x00, 0x00, 0x00, 0x00, 0x00];
         if (data.auto_return) {
             rv[0] |= 0x80;
