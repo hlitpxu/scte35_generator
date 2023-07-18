@@ -134,15 +134,16 @@ function copy_to_clipboard(text) {
         <div class="row">
             <div class="col-6">
                 <!-- select command type -->
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" for="select_command">Command</label>
+                <div class="row">
+                    <div class="col-4">
+                        <label class="input-group-text" for="descritor_type">Command Type</label>
                     </div>
-                    <select class="custom-select" id="select_command" v-model="splice_info.splice_command.type">
-                        <option v-for="(type, index) in COMMAND_TYPES" :key="index" :value="COMMAND_TYPES_VAL[index]">
-                            {{ COMMAND_TYPES[index] }}
-                        </option>
-                    </select>
+                    <div class="col-7">
+                        <select class="form-select form-select" v-model="splice_info.splice_command.type">
+                            <option v-for="type, index in COMMAND_TYPES_VAL" :key="index" :value="type">
+                                {{ COMMAND_TYPES[index] }}</option>
+                        </select>
+                    </div>
                 </div>
                 <!-- command content -->
                 <div v-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.SPLICE_INSERT">
@@ -156,24 +157,28 @@ function copy_to_clipboard(text) {
             </div>
             <div class="col-6">
                 <!-- select descriptor type -->
-                <div class="input-group">
-                    <div class="input-group-prepend">
+                <div class="row">
+                    <div class="col-4">
                         <label class="input-group-text" for="descritor_type">Descriptor Tag</label>
                     </div>
-                    <select class="custom-select" id="descritor_type" v-model="splice_info.new_descriptor.tag">
-                        <option v-for="(type, index) in DESCRIPTOR_TYPES_VAL" :key="index" :value="type">
-                            {{ DESCRIPTOR_VAL_TO_STR[type] }}
-                        </option>
-                    </select>
-                </div>
+                    <div class="col-6">
+                        <select class="form-select form-select" v-model="splice_info.new_descriptor.tag">
+                            <option v-for="type, index in DESCRIPTOR_TYPES_VAL" :key="index" :value="type">
+                                {{ DESCRIPTOR_VAL_TO_STR[type] }}</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                        data-bs-target="#descriptorView"
-                        @click="splice_info.new_descriptor.data.init = false; sendDesc(splice_info.new_descriptor, true)">Add</button>
+                    <div class="col-2">
+                        <div>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#descriptorView"
+                                @click="splice_info.new_descriptor.data.init = false; sendDesc(splice_info.new_descriptor, true)">Add</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- decriptor display -->
+                <hr />
                 <div class="table-responsive scrollable">
                     <table class="table">
                         <thead>
