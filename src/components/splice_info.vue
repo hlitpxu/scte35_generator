@@ -35,6 +35,17 @@ var splice_info = reactive({
     descriptors: [],
 });
 
+var display_descriptor = reactive({
+    is_create: false,
+    show_descriptor: false,
+    descriptor: {},
+});
+function sendDesc(d, is_create = false) {
+    display_descriptor.is_create = is_create;
+    display_descriptor.show_descriptor = true;
+    display_descriptor.descriptor = d;
+}
+
 function to_hex_str(bytes) {
     return Array.from(bytes, (byte) => {
         return ('0' + (byte & 0xff).toString(16)).slice(-2);
@@ -82,7 +93,7 @@ function get_binary(data) {
         }
     }
     binary[offset] |= (desc_length & 0xFF00) >>> 8;
-    binary[offset+1] |= (desc_length & 0xFF);
+    binary[offset + 1] |= (desc_length & 0xFF);
 
     // tail
     offset = binary.length;
@@ -256,11 +267,13 @@ function copy_to_clipboard(text) {
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <SegmentationDescriptor v-if="this.show_descriptor" v-model="this.descriptor.data" />
+                        <SegmentationDescriptor v-if="display_descriptor.show_descriptor"
+                            v-model="display_descriptor.descriptor.data" />
                     </div>
                     <div class="modal-footer">
-                        <button v-if="this.is_create" type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            @click="splice_info.descriptors.push(JSON.parse(JSON.stringify(this.descriptor)))">Create</button>
+                        <button v-if="display_descriptor.is_create" type="button" class="btn btn-primary"
+                            data-bs-dismiss="modal"
+                            @click="splice_info.descriptors.push(JSON.parse(JSON.stringify(display_descriptor.descriptor)))">Create</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -280,20 +293,6 @@ export default {
         TimeSignal,
         SegmentationDescriptor,
     },
-    data: function () {
-        return {
-            is_create: false,
-            show_descriptor: false,
-            descriptor: {},
-        };
-    },
-    methods: {
-        sendDesc(d, is_create = false) {
-            this.is_create = is_create;
-            this.show_descriptor = true;
-            this.descriptor = d;
-        }
-    }
 };
 </script>
 
