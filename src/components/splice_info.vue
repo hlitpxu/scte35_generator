@@ -20,7 +20,7 @@ const DESCRIPTOR_VAL_TO_STR = {
     2: "segmentation_descriptor",
 }
 
-var enable_debug = ref(true);
+var enable_debug = ref(false);
 var splice_info = reactive({
     splice_command: {
         type: COMMAND_TYPES_VAL.SPLICE_INSERT,
