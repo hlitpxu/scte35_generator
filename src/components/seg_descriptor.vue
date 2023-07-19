@@ -153,10 +153,10 @@ const SEGMENTATION_TYPES_VAL = {
                 </div> -->
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-5">
             <label class="input-group-text" for="descritor_type">segment_type</label>
         </div>
-        <div class="col-8">
+        <div class="col-7">
             <select class="form-select form-select" v-model="value.type_id">
                 <option v-for="type, index in SEGMENTATION_TYPES_VAL" :key="index" :value="type">
                     {{ SEGMENTATION_TYPES[index] }}</option>
