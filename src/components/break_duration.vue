@@ -32,7 +32,7 @@ export default {
         },
     },
     get_binary(data) {
-        var rv = [0x00, 0x00, 0x00, 0x00, 0x00];
+        var rv = [0x7E, 0x00, 0x00, 0x00, 0x00];
         if (data.auto_return) {
             rv[0] |= 0x80;
         }

@@ -56,7 +56,7 @@ const binary_str = ref("");
 const binary_base64 = ref("");
 
 function get_binary(data) {
-    var binary = [0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+    var binary = [0xFC, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xF0, 0x00];
     var offset = 0;
 
     // command part
@@ -100,7 +100,7 @@ function get_binary(data) {
     binary[offset + 1] |= (desc_length & 0xFF);
 
     // section length
-    var section_length = binary.length +2;
+    var section_length = binary.length + 1;
     binary[1] |= (section_length & 0x0F00) >>> 8;
     binary[2] |= (section_length & 0xFF);
 

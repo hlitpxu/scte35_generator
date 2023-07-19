@@ -32,9 +32,9 @@ export default {
     },
   },
   get_binary(data) {
-    var rv = [0x00];
+    var rv = [0x7F];
     if (data.time_specified) {
-      rv[0] |= 0x80;
+      rv[0] = 0xFE;
       rv.push(0x00, 0x00, 0x00, 0x00);
       if ((data.pts_time & 0x100000000) > 0) {
         rv[0] |= 0x01;

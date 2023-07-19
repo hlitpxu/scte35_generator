@@ -87,7 +87,7 @@ export default {
     },
   },
   get_binary(data) {
-    var rv = [0x00, 0x00, 0x00, 0x00, 0x00];
+    var rv = [0x00, 0x00, 0x00, 0x00, 0x7F];
     rv[0] |= (data.event_id & 0xFF000000) >>> 24;
     rv[1] |= (data.event_id & 0xFF0000) >>> 16;
     rv[2] |= (data.event_id & 0xFF00) >>> 8;
@@ -96,7 +96,7 @@ export default {
       rv[4] |= 0x80;
     } else {
       var offset = rv.length;
-      rv.push(0x00);
+      rv.push(0x0F);
       if (data.out_of_network) {
         rv[offset] |= 0x80;
       }

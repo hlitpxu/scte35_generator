@@ -215,7 +215,7 @@ export default {
         rv[offset + 3] |= (data.event_id & 0xFF);
 
         offset = rv.length;
-        rv.push(0x00);
+        rv.push(0x7F);
         if (data.event_cancel) {
             rv[offset] |= 0x80;
         } else {
@@ -228,7 +228,7 @@ export default {
                 rv[offset] |= 0x40
             }
             if (data.delivery_not_restricted_flag) {
-                rv[offset] |= 0x20;
+                rv[offset] |= 0x3F;
             } else {
                 if (data.web_delivery_allowed_flag) {
                     rv[offset] |= 0x10;
