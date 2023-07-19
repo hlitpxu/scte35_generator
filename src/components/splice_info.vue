@@ -56,7 +56,7 @@ const binary_str = ref("");
 const binary_base64 = ref("");
 
 function get_binary(data) {
-    var binary = [0xFC, 0x0F, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+    var binary = [0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
     var offset = 0;
 
     // command part
@@ -99,6 +99,11 @@ function get_binary(data) {
     binary[offset] |= (desc_length & 0xFF00) >>> 8;
     binary[offset + 1] |= (desc_length & 0xFF);
 
+    // section length
+    var section_length = binary.length +2;
+    binary[1] |= (section_length & 0x0F00) >>> 8;
+    binary[2] |= (section_length & 0xFF);
+
     // tail
     offset = binary.length;
     var crc_val = crc32mpeg2(binary) >>> 0;
@@ -108,10 +113,6 @@ function get_binary(data) {
     binary[offset + 1] |= (crc_val & 0xFF0000) >>> 16;
     binary[offset + 2] |= (crc_val & 0xFF00) >>> 8;
     binary[offset + 3] |= (crc_val & 0xFF);
-
-    var section_length = binary.length - 2;
-    binary[1] |= (section_length & 0x0F00) >>> 8;
-    binary[2] |= (section_length & 0xFF);
 
     binary_str.value = to_hex_str(binary);
     binary_base64.value = btoa(String.fromCharCode.apply(binary, binary)).replace(/.{76}(?=.)/g, '$&\n');
@@ -254,7 +255,7 @@ function copy_to_clipboard(text) {
 
         <!-- debug panel -->
         <hr />
-        <div v-if="false" class="row">
+        <div v-if="true" class="row">
             <div class="col-3">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" v-model="enable_debug">
