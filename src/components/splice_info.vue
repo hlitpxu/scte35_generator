@@ -255,7 +255,7 @@ function copy_to_clipboard(text) {
 
         <!-- debug panel -->
         <hr />
-        <div v-if="true" class="row">
+        <div v-if="false" class="row">
             <div class="col-3">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" v-model="enable_debug">
