@@ -1,25 +1,13 @@
 <script setup>
 import { reactive, ref } from "vue";
 import crc32mpeg2 from 'crc/calculators/crc32mpeg2';
-import { SEGMENTATION_TYPES_VAL_TO_STR } from './types.ts';
-
-const COMMAND_TYPES = {
-    SPLICE_INSERT: "splice_insert",
-    TIME_SIGNAL: "time_signal",
-};
-
-const COMMAND_TYPES_VAL = {
-    SPLICE_INSERT: 0x05,
-    TIME_SIGNAL: 0x06,
-};
-
-const DESCRIPTOR_TYPES_VAL = {
-    SEGMENTATION_DESC: 0x02,
-};
-
-const DESCRIPTOR_VAL_TO_STR = {
-    2: "segmentation_descriptor",
-}
+import {
+    COMMAND_TYPES_VAL,
+    COMMAND_TYPES_VAL_TO_STR,
+    DESCRIPTOR_TYPES_VAL,
+    DESCRIPTOR_VAL_TO_STR,
+    SEGMENTATION_TYPES_VAL_TO_STR,
+} from './types.ts';
 
 var enable_debug = ref(false);
 var splice_info = reactive({
@@ -139,7 +127,7 @@ function copy_to_clipboard(text) {
         <h5>Splice Info</h5>
         <div class="row">
             <div class="col-12 col-lg-6">
-                <hr/>
+                <hr />
                 <!-- select command type -->
                 <div class="row">
                     <div class="col-4">
@@ -148,7 +136,7 @@ function copy_to_clipboard(text) {
                     <div class="col-8">
                         <select class="form-select form-select" v-model="splice_info.splice_command.type">
                             <option v-for="type, index in COMMAND_TYPES_VAL" :key="index" :value="type">
-                                {{ COMMAND_TYPES[index] }}</option>
+                                {{ COMMAND_TYPES_VAL_TO_STR[type] }}</option>
                         </select>
                     </div>
                 </div>

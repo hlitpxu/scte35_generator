@@ -1,5 +1,8 @@
 <script setup>
-import { SEGMENTATION_TYPES_VAL, SEGMENTATION_TYPES_VAL_TO_STR } from './types.ts';
+import {
+    SEGMENTATION_TYPES_VAL,
+    SEGMENTATION_TYPES_VAL_TO_STR,
+} from './types.ts';
 </script>
 
 <template>
