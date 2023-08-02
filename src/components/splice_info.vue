@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 import crc32mpeg2 from 'crc/calculators/crc32mpeg2';
+import { SEGMENTATION_TYPES_VAL_TO_STR } from './types.ts';
 
 const COMMAND_TYPES = {
     SPLICE_INSERT: "splice_insert",
@@ -196,8 +197,17 @@ function copy_to_clipboard(text) {
                             <tr v-for="(d, i) in splice_info.descriptors" :key="i">
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#descriptorView" @click="sendDesc(splice_info.descriptors[i])">
+                                        data-bs-target="#descriptorView" @click="sendDesc(splice_info.descriptors[i])"
+                                        style="text-align: left;">
                                         {{ DESCRIPTOR_VAL_TO_STR[d.tag] }}
+                                        <br />
+                                        <div style="margin-left: 10px; text-align: left;">
+                                            <div v-if="d.tag == DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC">
+                                                type_id: {{ SEGMENTATION_TYPES_VAL_TO_STR[d.data.type_id] }}
+                                                <br />
+                                                duraion: {{ d.data.duration }}
+                                            </div>
+                                        </div>
                                     </button>
 
                                 </td>
