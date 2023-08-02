@@ -124,7 +124,8 @@ function copy_to_clipboard(text) {
 
 <template>
     <div class="container">
-        <h5>Splice Info</h5>
+        <br>
+        <h5 style="text-align: center;">Scte35 Generator</h5>
         <div class="row">
             <div class="col-12 col-lg-6">
                 <hr />
