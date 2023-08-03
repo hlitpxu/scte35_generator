@@ -1,3 +1,10 @@
+<script setup>
+var newComponent = {
+  tag: 0,
+  splice_time: {}
+};
+</script>
+
 <template>
   <div class="input-group">
     <div class="input-group-prepend">
@@ -36,8 +43,44 @@
     </div>
 
     <div class="form-check form-switch">
-      <input class="form-check-input" type="checkbox" v-model="value.program_splice" disabled>
+      <input class="form-check-input" type="checkbox" v-model="value.program_splice">
       <label class="form-check-label">program_splice</label>
+    </div>
+
+    <div v-if="!value.program_splice">
+      <div class="border rounded container">
+        <div class="row align-items-center" v-for="(comp, index) in value.components" :key="index">
+          <div class="col-5">
+            <div style="height: 95px;" class="d-flex align-items-center">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">tag</span>
+                </div>
+                <input type="number" class="form-control" v-model="comp.tag" />
+              </div>
+            </div>
+          </div>
+          <div class="col-5">
+            <SpliceTime v-if="!value.splice_immediate" v-model="comp.splice_time" />
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-outline-danger btn-sm" @click="value.components.splice(index, 1);">
+              X
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-outline-primary btn-sm"
+              @click="value.components.push(JSON.parse(JSON.stringify(newComponent)));">+</button>
+          </div>
+          <div class="col-5">
+          </div>
+        </div>
+      </div>
+      <br />
     </div>
 
     <div v-if="value.program_splice && !value.splice_immediate">
@@ -76,6 +119,7 @@ export default {
         v.duration_flag = false;
         v.splice_immediate = false;
         v.program_splice = true;
+        v.components = [];
         v.splice_time = {};
         v.break_duration = {};
         v.unique_id = 1;
@@ -113,7 +157,14 @@ export default {
         rv.push(...SpliceTime.get_binary(data.splice_time));
       }
       if (!data.program_splice) {
-        // not support yet
+        rv.push(data.components.length);
+        for (let i = 0; i < data.components.length; ++i) {
+          console.log(data.components[i]);
+          rv.push(data.components[i].tag);
+          if (!data.splice_immediate) {
+            rv.push(...SpliceTime.get_binary(data.components[i].splice_time));
+          }
+        }
       }
       if (data.duration_flag) {
         rv.push(...BreakDuration.get_binary(data.break_duration));
@@ -122,7 +173,7 @@ export default {
       offset = rv.length;
       rv.push(0x00, 0x00, 0x00, 0x00);
       rv[offset] |= (data.unique_id & 0xFF00) >>> 8;
-      rv[offset+1] |= (data.unique_id & 0xFF);
+      rv[offset + 1] |= (data.unique_id & 0xFF);
     }
     return rv;
   },

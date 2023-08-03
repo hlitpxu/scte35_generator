@@ -127,8 +127,7 @@ function copy_to_clipboard(text) {
         <br>
         <h5 style="text-align: center;">Scte35 Generator</h5>
         <div class="row">
-            <div class="col-12 col-lg-6">
-                <hr />
+            <div class="col-12 col-lg-6 border rounded display-block">
                 <!-- select command type -->
                 <div class="row">
                     <div class="col-4">
@@ -151,21 +150,20 @@ function copy_to_clipboard(text) {
                     <TimeSignal v-model="splice_info.splice_command.data" />
                 </div>
             </div>
-            <div class="col-12 col-lg-6">
-                <hr>
+            <div class="col-12 col-lg-6 border rounded display-block">
                 <!-- select descriptor type -->
                 <div class="row">
-                    <div class="col-4 col-md-4 col-lg-4">
+                    <div class="col-4">
                         <label class="input-group-text" for="descritor_type">Descriptor Tag</label>
                     </div>
-                    <div class="col-6 col-md-7 col-lg-6">
+                    <div class="col-6">
                         <select class="form-select form-select" v-model="splice_info.new_descriptor.tag">
                             <option v-for="type, index in DESCRIPTOR_TYPES_VAL" :key="index" :value="type">
                                 {{ DESCRIPTOR_VAL_TO_STR[type] }}</option>
                         </select>
                     </div>
 
-                    <div class="col-2 col-md-1 col-lg-2">
+                    <div class="col-2">
                         <div>
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                                 data-bs-target="#descriptorView"
@@ -212,9 +210,8 @@ function copy_to_clipboard(text) {
                 </div>
             </div>
         </div>
-        <br />
-        <div class="row gy-2">
-            <hr />
+        <div class="row gy-2 border rounded display-block">
+            <!-- <hr /> -->
             <div class="col-12">
                 <div>
                     <button type="button" class="btn btn-outline-primary btn-lg" @click="get_binary(splice_info)">Generate
@@ -222,41 +219,39 @@ function copy_to_clipboard(text) {
                 </div>
             </div>
 
-            <div class="col-4 col-sm-4 col-md-3 col-lg-2">
+            <div class="col-4 col-md-4 col-xl-2">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">SCTE35 Binary</span>
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-sm-6 col-md-8 col-lg-9">
+            <div class="col-5 col-md-6 col-xl-9">
                 <textarea class="form-control" aria-label="With textarea" rows="2" v-model="binary_str" disabled></textarea>
             </div>
-            <div class="col-2 col-sm-2 col-md-1">
+            <div class="col-3 col-md-2 col-xl-1">
                 <button type="button" class="btn btn-outline-primary" @click="copy_to_clipboard(binary_str)">Copy</button>
             </div>
 
-            <div class="col-4 col-sm-4 col-md-3 col-lg-2">
+            <div class="col-4 col-md-4 col-xl-2">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">SCTE35 Base64</span>
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-sm-6 col-md-8 col-lg-9">
+            <div class="col-5 col-md-6 col-xl-9">
                 <textarea class="form-control" aria-label="With textarea" rows="" v-model="binary_base64"
                     disabled></textarea>
             </div>
-            <div class="col-2 col-sm-2 col-md-1">
+            <div class="col-3 col-md-2 col-xl-1">
                 <button type="button" class="btn btn-outline-primary"
                     @click="copy_to_clipboard(binary_base64)">Copy</button>
             </div>
 
         </div>
-        <br />
         <!-- debug panel -->
-        <div v-if="false" class="row">
-            <hr />
+        <div v-if="true" class="row border rounded display-block">
             <div class="col-2 col-xl-1">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" v-model="enable_debug">
@@ -327,5 +322,12 @@ export default {
 .scrollable {
     max-height: 300px;
     overflow: auto;
+}
+
+.display-block {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 </style>
