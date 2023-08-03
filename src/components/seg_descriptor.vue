@@ -5,6 +5,8 @@ import {
     SEGMENTATION_UPID_TYPES_VAL,
     SEGMENTATION_UPID_TYPES_VAL_TO_STR,
     SEGMENTATION_UPID_TYPES_VAL_TO_LEN,
+    DEVICE_RESTRICTION_VAL,
+    DEVICE_RESTRICTION_VAL_TO_STR,
 } from './types.ts';
 
 var newComponent = {
@@ -106,19 +108,24 @@ var newComponent = {
                         <label class="form-check-label">archive_allowed_flag</label>
                     </div>
 
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">device_restrictions</span>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-6">
+                            <label class="input-group-text" for="restrictions">device_restrictions</label>
                         </div>
-                        <input type="number" class="form-control" v-model="value.device_restrictions" />
+                        <div class="col-6">
+                            <select class="form-select form-select" v-model="value.device_restrictions">
+                                <option v-for="val, index in DEVICE_RESTRICTION_VAL" :key="index" :value="val">
+                                    {{ DEVICE_RESTRICTION_VAL_TO_STR[val] }}</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
                 <div class="row" style="margin-top: 10px;">
                     <div class="col-4">
-                        <label class="input-group-text" for="descritor_type">upid_type</label>
+                        <label class="input-group-text" for="upid_type">upid_type</label>
                     </div>
-                    <div class="col-7">
+                    <div class="col-8">
                         <select class="form-select form-select" v-model="value.upid_type">
                             <option v-for="val, index in SEGMENTATION_UPID_TYPES_VAL" :key="index" :value="val">
                                 {{ SEGMENTATION_UPID_TYPES_VAL_TO_STR[val] }}</option>
@@ -168,7 +175,7 @@ export default {
                     v.web_delivery_allowed_flag = false;
                     v.no_regional_blackout_flag = false;
                     v.archive_allowed_flag = false;
-                    v.device_restrictions = 0;
+                    v.device_restrictions = DEVICE_RESTRICTION_VAL.NONE;
                     v.components = [];
                     v.duration = 0;
                     v.upid_type = SEGMENTATION_UPID_TYPES_VAL.NOT_USED;

@@ -198,3 +198,18 @@ export const SEGMENTATION_UPID_TYPES_VAL_TO_LEN = {
 	0x0E: -1,
 	0x0F: -1,
 };
+
+// device restriction
+export const DEVICE_RESTRICTION_VAL = {
+	GROUP_0: 0,
+	GROUP_1: 1,
+	GROUP_2: 2,
+	NONE: 3,
+};
+
+export const DEVICE_RESTRICTION_VAL_TO_STR = {
+	0: "group 0",
+	1: "group 1",
+	2: "group 2",
+	3: "none",
+};

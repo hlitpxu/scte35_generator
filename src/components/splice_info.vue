@@ -252,13 +252,13 @@ function copy_to_clipboard(text) {
         </div>
         <!-- debug panel -->
         <div v-if="true" class="row border rounded display-block">
-            <div class="col-2 col-xl-1">
+            <div class="col-2">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" v-model="enable_debug">
                     <label class="form-check-label">debug</label>
                 </div>
             </div>
-            <div class="col-8 col-xl-9">
+            <div class="col-8">
                 <div v-show="enable_debug">
                     <pre>{{ splice_info }}</pre>
                 </div>
