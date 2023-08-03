@@ -3,6 +3,11 @@ import {
     SEGMENTATION_TYPES_VAL,
     SEGMENTATION_TYPES_VAL_TO_STR,
 } from './types.ts';
+
+var newComponent = {
+    tag: 0,
+    pts_offset: 0,
+};
 </script>
 
 <template>
@@ -23,8 +28,43 @@ import {
             <div v-show="!value.event_cancel">
 
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" v-model="value.program_segmentation_flag" disabled>
+                    <input class="form-check-input" type="checkbox" v-model="value.program_segmentation_flag">
                     <label class="form-check-label">program_segmentation_flag</label>
+                </div>
+                <div v-if="!value.program_segmentation_flag">
+                    <div class="border rounded">
+                        <table>
+                            <thead>
+                                <th style="width: 45%;">tag</th>
+                                <th style="width: 45%;">pts_offset</th>
+                                <th>delete</th>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(comp, index) in value.components" :key="index">
+                                    <td>
+                                        <input type="number" class="form-control" v-model="comp.tag" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" v-model="comp.pts_offset" />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                            @click="value.components.splice(index, 1);">
+                                            X
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-outline-primary btn-sm"
+                                                @click="value.components.push(JSON.parse(JSON.stringify(newComponent)));">+</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="form-check form-switch">
@@ -114,7 +154,7 @@ export default {
                     v.no_regional_blackout_flag = false;
                     v.archive_allowed_flag = false;
                     v.device_restrictions = 0;
-                    // todo: component
+                    v.components = [];
                     v.duration = 0;
                     v.upid_type = 0;
                     // todo: upid
@@ -170,6 +210,19 @@ export default {
             }
 
             // program_segmentation_flag hardcode to true now
+            if (!data.program_segmentation_flag) {
+                rv.push(data.components.length);
+                for (let i = 0; i < data.components.length; ++i) {
+                    rv.push(data.components[i].tag);
+                    offset = rv.length;
+                    rv.push(0xFE, 0x00, 0x00, 0x00, 0x00);
+                    rv[offset] |= (data.components[i].pts_offset & 0x0100000000) >>> 32;
+                    rv[offset + 1] |= (data.components[i].pts_offset & 0xFF000000) >>> 24;
+                    rv[offset + 2] |= (data.components[i].pts_offset & 0xFF0000) >>> 16;
+                    rv[offset + 3] |= (data.components[i].pts_offsetue & 0xFF00) >>> 8;
+                    rv[offset + 4] |= (data.components[i].pts_offset & 0xFF);
+                }
+            }
 
             if (data.duration_flag) {
                 offset = rv.length;
@@ -185,7 +238,7 @@ export default {
             rv.push(0x00, 0x00);
 
             rv.push(data.type_id & 0xFF);
-            rv.push(0x00, 0x00);
+            rv.push(0x01, 0x01);
 
             switch (data.type_id) {
                 case 0x34:
