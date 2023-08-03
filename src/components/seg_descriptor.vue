@@ -2,6 +2,9 @@
 import {
     SEGMENTATION_TYPES_VAL,
     SEGMENTATION_TYPES_VAL_TO_STR,
+    SEGMENTATION_UPID_TYPES_VAL,
+    SEGMENTATION_UPID_TYPES_VAL_TO_STR,
+    SEGMENTATION_UPID_TYPES_VAL_TO_LEN,
 } from './types.ts';
 
 var newComponent = {
@@ -111,13 +114,25 @@ var newComponent = {
                     </div>
                 </div>
 
-                <!--  set to 0 now
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">upid_type</span>
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-4">
+                        <label class="input-group-text" for="descritor_type">upid_type</label>
                     </div>
-                    <input type="number" class="form-control" v-model="value.upid_type" />
-                </div> -->
+                    <div class="col-7">
+                        <select class="form-select form-select" v-model="value.upid_type">
+                            <option v-for="val, index in SEGMENTATION_UPID_TYPES_VAL" :key="index" :value="val">
+                                {{ SEGMENTATION_UPID_TYPES_VAL_TO_STR[val] }}</option>
+                        </select>
+                    </div>
+                    <div v-if="value.upid_type != SEGMENTATION_UPID_TYPES_VAL.NOT_USED" class="col-12">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">upid</span>
+                            </div>
+                            <input type="text" class="form-control" v-model="value.upid" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-5">
@@ -156,8 +171,8 @@ export default {
                     v.device_restrictions = 0;
                     v.components = [];
                     v.duration = 0;
-                    v.upid_type = 0;
-                    // todo: upid
+                    v.upid_type = SEGMENTATION_UPID_TYPES_VAL.NOT_USED;
+                    v.upid = "";
                     v.type_id = 0;
                     v.segment_num = 0;
                     v.segments_expcted = 0;
@@ -234,8 +249,23 @@ export default {
                 rv[offset + 4] |= (data.duration & 0xFF);
             }
 
-            // upid type and length set to 0
-            rv.push(0x00, 0x00);
+            let upid_length = SEGMENTATION_UPID_TYPES_VAL_TO_LEN[data.upid_type];
+            let upid_data = data.upid;
+            if (upid_length >= 0) {
+                if (upid_data.length < upid_length) {
+                    upid_data = data.upid.padStart(upid_length, 0x00);
+                } else {
+                    upid_data = upid_data.slice(0, upid_length);
+                }
+            } else {
+                upid_length = data.upid.length;
+            }
+            rv.push(data.upid_type);
+            rv.push(upid_length);
+            for (let i = 0; i < upid_length; ++i) {
+                rv.push(upid_data.charCodeAt(i));
+            }
+            // rv.push(...upid_data);
 
             rv.push(data.type_id & 0xFF);
             rv.push(0x01, 0x01);

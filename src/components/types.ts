@@ -1,3 +1,5 @@
+import { isReactive, toDisplayString } from "vue";
+
 // splice command type
 export const COMMAND_TYPES_VAL = {
 	SPLICE_INSERT: 0x05,
@@ -137,4 +139,62 @@ export const SEGMENTATION_TYPES_VAL_TO_STR = {
 	0x41: "unscheduled_event_end",
 	0x50: "network_start",
 	0x51: "network_end",
+};
+
+// segmentation descriptor upid type
+export const SEGMENTATION_UPID_TYPES_VAL = {
+	NOT_USED: 0x00,
+	USER_DEFINED: 0x01,
+	ISCI: 0x02,
+	AD_ID: 0x03,
+	UMID: 0x04,
+	ISAN_5: 0x05,
+	ISAN_6: 0x06,
+	TID: 0x07,
+	TI: 0x08,
+	ADI: 0x09,
+	EIDR: 0x0A,
+	ATSC_CONTENT_IDENTIFIER: 0x0B,
+	MPU: 0x0C,
+	MID: 0x0D,
+	ADS_INFORMATION: 0x0E,
+	URI: 0x0F,
+};
+
+export const SEGMENTATION_UPID_TYPES_VAL_TO_STR = {
+	0x00: "not_used",
+	0x01: "user_defined",
+	0x02: "isci",
+	0x03: "ad_id",
+	0x04: "umid",
+	0x05: "isan_5",
+	0x06: "isan_6",
+	0x07: "tid",
+	0x08: "ti",
+	0x09: "adi",
+	0x0A: "eidr",
+	0x0B: "atsc_content_identifier",
+	0x0C: "mpu",
+	0x0D: "mid",
+	0x0E: "ads_information",
+	0x0F: "uri",
+};
+
+export const SEGMENTATION_UPID_TYPES_VAL_TO_LEN = {
+	0x00: 0,
+	0x01: -1,
+	0x02: 8,
+	0x03: 12,
+	0x04: 32,
+	0x05: 8,
+	0x06: 12,
+	0x07: 12,
+	0x08: 8,
+	0x09: -1,
+	0x0A: 12,
+	0x0B: -1,
+	0x0C: -1,
+	0x0D: -1,
+	0x0E: -1,
+	0x0F: -1,
 };
