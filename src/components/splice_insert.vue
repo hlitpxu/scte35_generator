@@ -70,11 +70,11 @@ var newComponent = {
           </div>
         </div>
         <div class="row">
-          <div class="col-5">
-          </div>
           <div class="col-2">
             <button type="button" class="btn btn-outline-primary btn-sm"
               @click="value.components.push(JSON.parse(JSON.stringify(newComponent)));">+</button>
+          </div>
+          <div class="col-5">
           </div>
           <div class="col-5">
           </div>
