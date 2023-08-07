@@ -253,6 +253,11 @@ function copy_to_clipboard(text) {
             </div>
 
         </div>
+
+        <div class="row border rounded display-block">
+            <EsamOobPlayer v-model="generatedData"/>
+        </div>
+
         <!-- debug panel -->
         <div v-if="true" class="row border rounded display-block">
             <div class="col-2">
@@ -311,12 +316,14 @@ function copy_to_clipboard(text) {
 import SpliceInsert from "./splice_insert.vue"
 import TimeSignal from "./time_signal.vue"
 import SegmentationDescriptor from "./seg_descriptor.vue"
+import EsamOobPlayer from './esam_oob_player.vue';
 export default {
     name: "SpliceInfo",
     components: {
         SpliceInsert,
         TimeSignal,
         SegmentationDescriptor,
+        EsamOobPlayer,
     },
 };
 </script>
