@@ -2,13 +2,13 @@ name: Deploy github page
 on:
   push:
     branches:
-      - main
+      - deploy_page
     paths-ignore:
       - README.md
       - .gitignore
   pull_request_target:
     branches:
-      - main
+      - deploy_page
     types:
       - closed
   workflow_dispatch:
