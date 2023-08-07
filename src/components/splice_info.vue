@@ -41,8 +41,11 @@ function to_hex_str(bytes) {
     }).join('');
 }
 
-const binary_str = ref("");
-const binary_base64 = ref("");
+const generatedData = reactive({
+    binary_str: "",
+    binary_base64: "",
+});
+
 
 function get_binary(data) {
     var binary = [0xFC, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xF0, 0x00];
@@ -103,8 +106,8 @@ function get_binary(data) {
     binary[offset + 2] |= (crc_val & 0xFF00) >>> 8;
     binary[offset + 3] |= (crc_val & 0xFF);
 
-    binary_str.value = to_hex_str(binary);
-    binary_base64.value = btoa(String.fromCharCode.apply(binary, binary)).replace(/.{76}(?=.)/g, '$&\n');
+    generatedData.binary_str = to_hex_str(binary);
+    generatedData.binary_base64 = btoa(String.fromCharCode.apply(binary, binary)).replace(/.{76}(?=.)/g, '$&\n');
 }
 
 function copy_to_clipboard(text) {
@@ -227,10 +230,10 @@ function copy_to_clipboard(text) {
                 </div>
             </div>
             <div class="col-5 col-md-6 col-xl-9">
-                <textarea class="form-control" aria-label="With textarea" rows="2" v-model="binary_str" disabled></textarea>
+                <textarea class="form-control" aria-label="With textarea" rows="2" v-model="generatedData.binary_str" disabled></textarea>
             </div>
             <div class="col-3 col-md-2 col-xl-1">
-                <button type="button" class="btn btn-outline-primary" @click="copy_to_clipboard(binary_str)">Copy</button>
+                <button type="button" class="btn btn-outline-primary" @click="copy_to_clipboard(generatedData.binary_str)">Copy</button>
             </div>
 
             <div class="col-4 col-md-4 col-xl-2">
@@ -241,12 +244,12 @@ function copy_to_clipboard(text) {
                 </div>
             </div>
             <div class="col-5 col-md-6 col-xl-9">
-                <textarea class="form-control" aria-label="With textarea" rows="" v-model="binary_base64"
+                <textarea class="form-control" aria-label="With textarea" rows="" v-model="generatedData.binary_base64"
                     disabled></textarea>
             </div>
             <div class="col-3 col-md-2 col-xl-1">
                 <button type="button" class="btn btn-outline-primary"
-                    @click="copy_to_clipboard(binary_base64)">Copy</button>
+                    @click="copy_to_clipboard(generatedData.binary_base64)">Copy</button>
             </div>
 
         </div>
