@@ -21,4 +21,4 @@ npm run serve
 ```
 
 #### Deploy to github-page
-push or merge new commit to main branch will trigger github-page deploy automatically
+push or merge new commit to deploy_page branch will trigger github-page deploy automatically
