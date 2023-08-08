@@ -1,5 +1,6 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive } from 'vue';
+import esamService from '@/services/Esam.js'
 
 const TIME_MODE = {
     ABSOLUTE: 0,
@@ -11,23 +12,12 @@ const TIME_MODE_TO_STR = {
     1: "from_now",
 };
 
-const ESAM_OOB_TEMPLATE = `<?xml version="1.0"?>  
-<ns2:SignalProcessingNotification acquisitionPointIdentity="REPLACE_ACQ_ID"
-	xmlns="urn:cablelabs:md:xsd:core:3.0"
-	xmlns:ns2="urn:cablelabs:iptvservices:esam:xsd:signal:1"
-	xmlns:ns3="urn:cablelabs:md:xsd:content:3.0"
-	xmlns:ns5="urn:cablelabs:iptvservices:esam:xsd:common:1"
-	xmlns:sig="urn:cablelabs:md:xsd:signaling:3.0">
-	<ns5:StatusCode classCode="0" />
-	<ns2:ResponseSignal acquisitionPointIdentity="REPLACE_ACQ_ID" acquisitionSignalID="uyg9LWOMSW-Lm-l_7is1WA"
-        action="create" signalPointID="PV19JDLZREi8qxrMi2iceA">
-		<sig:UTCPoint utcPoint="REPLACE_TIME" />
-		<sig:BinaryData signalType="SCTE35">REPLACTE_BINARY</sig:BinaryData>
-	</ns2:ResponseSignal>
-</ns2:SignalProcessingNotification>
-`;
-const xml_template = ref("");
-xml_template.value = ESAM_OOB_TEMPLATE;
+var esam_request_response = reactive({
+    has_data: false,
+    data: {},
+    has_esam_command: false,
+    esam_command: "",
+});
 
 var oob_request = reactive({
     ip: "198.18.12.151",
@@ -38,7 +28,9 @@ var oob_request = reactive({
     utc_date: new Date(),
 });
 
-function sendOobRequest(base64str) {
+async function sendOobRequest(base64str) {
+    esam_request_response.has_data = false;
+
     var utc_time = new Date();
     switch (oob_request.time_mode) {
         case TIME_MODE.ABSOLUTE:
@@ -53,25 +45,24 @@ function sendOobRequest(base64str) {
     const acq_id = oob_request.acq_id;
     const url = "http://" + oob_request.ip + ":" + oob_request.port.toString() + "/";
 
-    var xml = xml_template.value;
-    xml = xml.replaceAll("REPLACE_TIME", utc_time_str);
-    xml = xml.replaceAll("REPLACTE_BINARY", binary_str);
-    xml = xml.replaceAll("REPLACE_ACQ_ID", acq_id);
+    try {
+        var response = await esamService.post({
+            url: url,
+            method: "POST",
+            utc_time: utc_time_str,
+            scte35_binary: binary_str,
+            acq_id: acq_id,
+        });
+        console.log(response);
+        
+        esam_request_response.has_data = true;
+        esam_request_response.data = response.data.server_response;
 
-    console.log("send to ", url, "oob request", xml);
-
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/xml',
-        },
-        body: xml,
-    };
-
-    fetch(url, requestOptions)
-        .then(response => response.json())
-        .catch(e => console.log(e));
-
+        esam_request_response.has_esam_command = true;
+        esam_request_response.esam_command = response.data.esam_command;
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 </script>
@@ -105,9 +96,7 @@ function sendOobRequest(base64str) {
                 </div>
                 <input type="text" class="form-control" v-model="oob_request.acq_id" />
             </div>
-        </div>
 
-        <div class="col-12 col-lg-6">
             <div class="input-group">
                 <div class="col-5">
                     <label class="input-group-text" for="descritor_type">time mode</label>
@@ -131,24 +120,33 @@ function sendOobRequest(base64str) {
                     <input type="number" class="form-control" v-model="oob_request.from_now" />
                 </div>
             </div>
+        </div>
 
+        <div class="col-12 col-lg-6">
             <div class="input-group">
                 <button type="button" class="btn btn-outline-primary" @click="sendOobRequest(modelValue.binary_base64)">
-                    Send
+                    Send ESAM Request
                 </button>
+            </div>
+
+            <div class="border rounded" style="margin-top: 10px; min-height: 150px;">
+                <pre v-if="esam_request_response.has_data">{{ esam_request_response.data }}</pre>
             </div>
         </div>
     </div>
 
-    <div class="row input-group">
-        <div class="col">
-            <span>XML Template</span>
+    <div v-if="esam_request_response.has_esam_command">
+        <div class="row input-group">
+            <div class="col" style="text-align: center;">
+                <span>ESAM Command</span>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <prism-editor class="my-editor prism-editor-wrapper border rounded" v-model="xml_template"
-                :highlight="highlighter" language="xml" lineNumbers readonly></prism-editor>
+        <div class="row">
+            <div class="col">
+                <prism-editor class="my-editor prism-editor-wrapper border rounded"
+                    v-model="esam_request_response.esam_command" :highlight="highlighter" language="xml" lineNumbers
+                    readonly></prism-editor>
+            </div>
         </div>
     </div>
 </template>
