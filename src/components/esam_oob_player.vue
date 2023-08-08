@@ -23,7 +23,7 @@ var oob_request = reactive({
     ip: "198.18.12.151",
     port: 8088,
     acq_id: "VOSTEST1",
-    time_mode: TIME_MODE.ABSOLUTE,
+    time_mode: TIME_MODE.RELATIVE,
     from_now: 10,
     utc_date: new Date(),
 });
@@ -54,7 +54,7 @@ async function sendOobRequest(base64str) {
             acq_id: acq_id,
         });
         console.log(response);
-        
+
         esam_request_response.has_data = true;
         esam_request_response.data = response.data.server_response;
 

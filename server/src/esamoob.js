@@ -11,11 +11,11 @@ const ESAM_OOB_TEMPLATE = `<?xml version="1.0"?>
 `;
 
 const SCTE35_TEMPLATE = `
-<ns2:ResponseSignal acquisitionPointIdentity="REPLACE_ACQ_ID" acquisitionSignalID="uyg9LWOMSW-Lm-l_7is1WA"
-	action="create" signalPointID="PV19JDLZREi8qxrMi2iceA">
-	<sig:UTCPoint utcPoint="REPLACE_TIME" />
-	<sig:BinaryData signalType="SCTE35">REPLACE_BINARY</sig:BinaryData>
-</ns2:ResponseSignal>
+	<ns2:ResponseSignal acquisitionPointIdentity="REPLACE_ACQ_ID" acquisitionSignalID="uyg9LWOMSW-Lm-l_7is1WA"
+		action="create" signalPointID="PV19JDLZREi8qxrMi2iceA">
+		<sig:UTCPoint utcPoint="REPLACE_TIME" />
+		<sig:BinaryData signalType="SCTE35">REPLACE_BINARY</sig:BinaryData>
+	</ns2:ResponseSignal>
 `;
 
 function make_esam_request(acq_id, utc_time, scte35_binary) {
