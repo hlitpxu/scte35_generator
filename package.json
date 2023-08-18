@@ -6,12 +6,14 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "sh deploy.sh"
+    "dev": "concurrently --kill-others \"npm run serve\"  \"npm --prefix server run start\" ",
+    "setup": "npm install && npm --prefix server install"
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^5.4.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0",
+    "concurrently": "^8.2.0",
     "core-js": "^3.8.3",
     "crc": "^4.3.2",
     "prismjs": "^1.29.0",

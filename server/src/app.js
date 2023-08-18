@@ -3,9 +3,16 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const esamoob = require('./esamoob.js');
 
+const path = __dirname + '/../../dist/';
+
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static(path));
+
+app.get('/', function (req, res) {
+	res.sendFile(path + "index.html");
+});
 
 app.get('/status', (req, res) => {
 	res.send("Server is running");
@@ -37,7 +44,10 @@ app.post('/esam', (req, res) => {
 		})
 		.catch(e => {
 			res.send({
-				error: e.message,
+				server_response: {
+					error: e.message,
+				},
+				esam_command: esam_command,
 			});
 		});
 })
