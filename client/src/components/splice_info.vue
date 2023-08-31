@@ -270,7 +270,7 @@ function copy_to_clipboard(text) {
             </div>
 
             <!-- ESAM OOB -->
-            <div class="col-12">
+            <div v-if="false" class="col-12">
                 <div class="border rounded display-block">
                     <EsamOobPlayer v-model="generatedData" />
                 </div>
