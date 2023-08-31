@@ -27,9 +27,13 @@ app.post('/esam', (req, res) => {
 
 	var esam_command = esamoob.make_esam_request(acq_id, utc_time, scte35_binary)
 
+	const controller = new AbortController()
+	const timeoutHttp = setTimeout(() => controller.abort(), 1000)
+
 	fetch(url, {
 		method: method,
 		body: esam_command,
+		signal: controller.signal,
 	})
 		.then(resp => {
 			console.log(resp);
@@ -43,6 +47,7 @@ app.post('/esam', (req, res) => {
 			});
 		})
 		.catch(e => {
+			console.log(e)
 			res.send({
 				server_response: {
 					error: e.message,
