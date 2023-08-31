@@ -1,4 +1,4 @@
 module.exports = {
-  publicPath: '/',
+  publicPath: '/scte35_generator/',
   outputDir: '../dist'
 }
