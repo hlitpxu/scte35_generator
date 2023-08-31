@@ -4,8 +4,9 @@ const bodyParser = require('body-parser');
 const esamoob = require('./esamoob.js');
 
 const path = __dirname + '/../../dist/';
-
 const app = express();
+const PORT = 9123;
+
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(path));
@@ -57,4 +58,4 @@ app.post('/esam', (req, res) => {
 		});
 })
 
-app.listen(process.env.PORT || 9123);
+app.listen(process.env.PORT || PORT);

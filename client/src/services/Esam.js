@@ -1,7 +1,7 @@
-import Api from './Api'
+import axios from 'axios'
 
 export default {
 	post(request) {
-		return Api().post('esam', request);
+		return axios.post('/esam', request);
 	},
 }
