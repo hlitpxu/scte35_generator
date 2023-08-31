@@ -130,136 +130,144 @@ function copy_to_clipboard(text) {
         <br>
         <h5 style="text-align: center;">Scte35 Generator</h5>
         <div class="row">
-            <div class="col-12 col-lg-6 border rounded display-block">
+            <div class="col-12 col-lg-6">
                 <!-- select command type -->
-                <div class="row">
-                    <div class="col-4">
-                        <label class="input-group-text" for="descritor_type">Command Type</label>
+                <div class="border rounded display-block">
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="input-group-text" for="command type">Command Type</label>
+                        </div>
+                        <div class="col-8">
+                            <select class="form-select form-select" v-model="splice_info.splice_command.type">
+                                <option v-for="type, index in COMMAND_TYPES_VAL" :key="index" :value="type">
+                                    {{ COMMAND_TYPES_VAL_TO_STR[type] }}</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-8">
-                        <select class="form-select form-select" v-model="splice_info.splice_command.type">
-                            <option v-for="type, index in COMMAND_TYPES_VAL" :key="index" :value="type">
-                                {{ COMMAND_TYPES_VAL_TO_STR[type] }}</option>
-                        </select>
+                    <!-- command content -->
+                    <div v-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.SPLICE_INSERT">
+                        <hr />
+                        <SpliceInsert v-model="splice_info.splice_command.data" />
                     </div>
-                </div>
-                <!-- command content -->
-                <div v-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.SPLICE_INSERT">
-                    <hr />
-                    <SpliceInsert v-model="splice_info.splice_command.data" />
-                </div>
-                <div v-else-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.TIME_SIGNAL">
-                    <hr />
-                    <TimeSignal v-model="splice_info.splice_command.data" />
+                    <div v-else-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.TIME_SIGNAL">
+                        <hr />
+                        <TimeSignal v-model="splice_info.splice_command.data" />
+                    </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-6 border rounded display-block">
+            <div class="col-12 col-lg-6">
                 <!-- select descriptor type -->
-                <div class="row">
-                    <div class="col-4">
-                        <label class="input-group-text" for="descritor_type">Descriptor Tag</label>
-                    </div>
-                    <div class="col-6">
-                        <select class="form-select form-select" v-model="splice_info.new_descriptor.tag">
-                            <option v-for="type, index in DESCRIPTOR_TYPES_VAL" :key="index" :value="type">
-                                {{ DESCRIPTOR_VAL_TO_STR[type] }}</option>
-                        </select>
+                <div class="border rounded display-block">
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="input-group-text" for="descritor_type">Descriptor Tag</label>
+                        </div>
+                        <div class="col-6">
+                            <select class="form-select form-select" v-model="splice_info.new_descriptor.tag">
+                                <option v-for="type, index in DESCRIPTOR_TYPES_VAL" :key="index" :value="type">
+                                    {{ DESCRIPTOR_VAL_TO_STR[type] }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-2">
+                            <div>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                    data-bs-target="#descriptorView"
+                                    @click="splice_info.new_descriptor.data.init = false; sendDesc(splice_info.new_descriptor, true)">Add</button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="col-2">
-                        <div>
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                data-bs-target="#descriptorView"
-                                @click="splice_info.new_descriptor.data.init = false; sendDesc(splice_info.new_descriptor, true)">Add</button>
+                    <!-- decriptor display -->
+                    <hr />
+                    <div class="table-responsive scrollable">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="position: sticky; top:0;">Descriptor</th>
+                                    <th style="position: sticky; top:0;">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(d, i) in splice_info.descriptors" :key="i">
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#descriptorView" @click="sendDesc(splice_info.descriptors[i])"
+                                            style="text-align: left;">
+                                            {{ DESCRIPTOR_VAL_TO_STR[d.tag] }}
+                                            <br />
+                                            <div style="margin-left: 10px; text-align: left;">
+                                                <div v-if="d.tag == DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC">
+                                                    type_id: {{ SEGMENTATION_TYPES_VAL_TO_STR[d.data.type_id] }}
+                                                    <br />
+                                                    duraion: {{ d.data.duration }}
+                                                </div>
+                                            </div>
+                                        </button>
+
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                            @click="splice_info.descriptors.splice(i, 1)">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="border rounded display-block">
+            <div class="row gy-2">
+                <div class="col-12">
+                    <div>
+                        <button type="button" class="btn btn-outline-primary btn-lg"
+                            @click="get_binary(splice_info)">Generate
+                            SCTE35</button>
+                    </div>
+                </div>
+
+                <div class="col-4 col-md-4 col-xl-2">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">SCTE35 Binary</span>
                         </div>
                     </div>
                 </div>
+                <div class="col-5 col-md-6 col-xl-9">
+                    <textarea class="form-control" aria-label="With textarea" rows="2" v-model="generatedData.binary_str"
+                        disabled></textarea>
+                </div>
+                <div class="col-3 col-md-2 col-xl-1">
+                    <button type="button" class="btn btn-outline-primary"
+                        @click="copy_to_clipboard(generatedData.binary_str)">Copy</button>
+                </div>
 
-                <!-- decriptor display -->
-                <hr />
-                <div class="table-responsive scrollable">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th style="position: sticky; top:0;">Descriptor</th>
-                                <th style="position: sticky; top:0;">Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(d, i) in splice_info.descriptors" :key="i">
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#descriptorView" @click="sendDesc(splice_info.descriptors[i])"
-                                        style="text-align: left;">
-                                        {{ DESCRIPTOR_VAL_TO_STR[d.tag] }}
-                                        <br />
-                                        <div style="margin-left: 10px; text-align: left;">
-                                            <div v-if="d.tag == DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC">
-                                                type_id: {{ SEGMENTATION_TYPES_VAL_TO_STR[d.data.type_id] }}
-                                                <br />
-                                                duraion: {{ d.data.duration }}
-                                            </div>
-                                        </div>
-                                    </button>
-
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                        @click="splice_info.descriptors.splice(i, 1)">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="col-4 col-md-4 col-xl-2">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">SCTE35 Base64</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5 col-md-6 col-xl-9">
+                    <textarea class="form-control" aria-label="With textarea" rows="" v-model="generatedData.binary_base64"
+                        disabled></textarea>
+                </div>
+                <div class="col-3 col-md-2 col-xl-1">
+                    <button type="button" class="btn btn-outline-primary"
+                        @click="copy_to_clipboard(generatedData.binary_base64)">Copy</button>
                 </div>
             </div>
         </div>
-        <div class="row gy-2 border rounded display-block">
-            <!-- <hr /> -->
-            <div class="col-12">
-                <div>
-                    <button type="button" class="btn btn-outline-primary btn-lg" @click="get_binary(splice_info)">Generate
-                        SCTE35</button>
-                </div>
-            </div>
 
-            <div class="col-4 col-md-4 col-xl-2">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">SCTE35 Binary</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-5 col-md-6 col-xl-9">
-                <textarea class="form-control" aria-label="With textarea" rows="2" v-model="generatedData.binary_str" disabled></textarea>
-            </div>
-            <div class="col-3 col-md-2 col-xl-1">
-                <button type="button" class="btn btn-outline-primary" @click="copy_to_clipboard(generatedData.binary_str)">Copy</button>
-            </div>
-
-            <div class="col-4 col-md-4 col-xl-2">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">SCTE35 Base64</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-5 col-md-6 col-xl-9">
-                <textarea class="form-control" aria-label="With textarea" rows="" v-model="generatedData.binary_base64"
-                    disabled></textarea>
-            </div>
-            <div class="col-3 col-md-2 col-xl-1">
-                <button type="button" class="btn btn-outline-primary"
-                    @click="copy_to_clipboard(generatedData.binary_base64)">Copy</button>
-            </div>
-
-        </div>
-
-        <div class="row border rounded display-block">
-            <EsamOobPlayer v-model="generatedData"/>
+        <div class="border rounded display-block">
+            <EsamOobPlayer v-model="generatedData" />
         </div>
 
         <!-- debug panel -->
-        <div v-if="true" class="row border rounded display-block">
+        <div v-if="false" class="border rounded display-block">
             <div class="col-2">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" v-model="enable_debug">
@@ -335,9 +343,9 @@ export default {
 }
 
 .display-block {
+    padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 </style>
