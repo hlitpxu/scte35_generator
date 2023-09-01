@@ -348,17 +348,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.scrollable {
-    max-height: 300px;
-    overflow: auto;
-}
-
-.display-block {
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-}
-</style>
