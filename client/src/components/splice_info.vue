@@ -130,6 +130,7 @@ function copy_to_clipboard(text) {
         <br>
         <h5 style="text-align: center;">Scte35 Generator</h5>
         <div class="row">
+            <!-- Command -->
             <div class="col-12 col-lg-6">
                 <!-- select command type -->
                 <div class="border rounded display-block">
@@ -155,6 +156,8 @@ function copy_to_clipboard(text) {
                     </div>
                 </div>
             </div>
+
+            <!-- Descriptor -->
             <div class="col-12 col-lg-6">
                 <!-- select descriptor type -->
                 <div class="border rounded display-block">
@@ -216,71 +219,80 @@ function copy_to_clipboard(text) {
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="border rounded display-block">
-            <div class="row gy-2">
-                <div class="col-12">
-                    <div>
-                        <button type="button" class="btn btn-outline-primary btn-lg"
-                            @click="get_binary(splice_info)">Generate
-                            SCTE35</button>
-                    </div>
-                </div>
 
-                <div class="col-4 col-md-4 col-xl-2">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">SCTE35 Binary</span>
+            <!-- SCTE35 output -->
+            <div class="col-12">
+                <div class="border rounded display-block">
+                    <div class="row gy-2">
+                        <div class="col-12">
+                            <div>
+                                <button type="button" class="btn btn-outline-primary btn-lg"
+                                    @click="get_binary(splice_info)">Generate
+                                    SCTE35</button>
+                            </div>
+                        </div>
+
+                        <div class="col-4 col-md-4 col-xl-2">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">SCTE35 Binary</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 col-md-6 col-xl-9">
+                            <textarea class="form-control" aria-label="With textarea" rows="2"
+                                v-model="generatedData.binary_str" disabled></textarea>
+                        </div>
+                        <div class="col-3 col-md-2 col-xl-1">
+                            <button type="button" class="btn btn-outline-primary"
+                                @click="copy_to_clipboard(generatedData.binary_str)">Copy</button>
+                        </div>
+
+                        <div class="col-4 col-md-4 col-xl-2">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">SCTE35 Base64</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 col-md-6 col-xl-9">
+                            <textarea class="form-control" aria-label="With textarea" rows=""
+                                v-model="generatedData.binary_base64" disabled></textarea>
+                        </div>
+                        <div class="col-3 col-md-2 col-xl-1">
+                            <button type="button" class="btn btn-outline-primary"
+                                @click="copy_to_clipboard(generatedData.binary_base64)">Copy</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-5 col-md-6 col-xl-9">
-                    <textarea class="form-control" aria-label="With textarea" rows="2" v-model="generatedData.binary_str"
-                        disabled></textarea>
-                </div>
-                <div class="col-3 col-md-2 col-xl-1">
-                    <button type="button" class="btn btn-outline-primary"
-                        @click="copy_to_clipboard(generatedData.binary_str)">Copy</button>
-                </div>
+            </div>
 
-                <div class="col-4 col-md-4 col-xl-2">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">SCTE35 Base64</span>
+            <!-- ESAM OOB -->
+            <div class="col-12">
+                <div class="border rounded display-block">
+                    <EsamOobPlayer v-model="generatedData" />
+                </div>
+            </div>
+
+            <!-- debug panel -->
+            <div v-if="false" class="col-12">
+                <div class="border rounded display-block">
+                    <div class="col-2">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" v-model="enable_debug">
+                            <label class="form-check-label">debug</label>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div v-show="enable_debug">
+                            <pre>{{ splice_info }}</pre>
                         </div>
                     </div>
                 </div>
-                <div class="col-5 col-md-6 col-xl-9">
-                    <textarea class="form-control" aria-label="With textarea" rows="" v-model="generatedData.binary_base64"
-                        disabled></textarea>
-                </div>
-                <div class="col-3 col-md-2 col-xl-1">
-                    <button type="button" class="btn btn-outline-primary"
-                        @click="copy_to_clipboard(generatedData.binary_base64)">Copy</button>
-                </div>
             </div>
         </div>
 
-        <div class="border rounded display-block">
-            <EsamOobPlayer v-model="generatedData" />
-        </div>
-
-        <!-- debug panel -->
-        <div v-if="false" class="border rounded display-block">
-            <div class="col-2">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" v-model="enable_debug">
-                    <label class="form-check-label">debug</label>
-                </div>
-            </div>
-            <div class="col-8">
-                <div v-show="enable_debug">
-                    <pre>{{ splice_info }}</pre>
-                </div>
-            </div>
-        </div>
-
+        <!-- Footer -->
         <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 my-5 border-top">
             <div class="col-md-4 d-flex align-items-center">
                 <span>
@@ -297,6 +309,7 @@ function copy_to_clipboard(text) {
             </div>
         </footer>
 
+        <!-- Decriptor modal -->
         <div class="modal fade" id="descriptorView" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
