@@ -28,6 +28,7 @@ var oob_request = reactive({
     utc_date: new Date(),
 });
 
+var waitForResponse = false;
 async function sendOobRequest(base64str) {
     esam_request_response.has_data = false;
 
@@ -46,6 +47,7 @@ async function sendOobRequest(base64str) {
     const url = "http://" + oob_request.ip + ":" + oob_request.port.toString() + "/";
 
     try {
+        waitForResponse = true;
         var response = await esamService.post({
             url: url,
             method: "POST",
@@ -62,6 +64,8 @@ async function sendOobRequest(base64str) {
         esam_request_response.esam_command = response.data.esam_command;
     } catch (e) {
         console.log(e);
+    } finally {
+        waitForResponse = false;
     }
 }
 
@@ -124,7 +128,7 @@ async function sendOobRequest(base64str) {
 
         <div class="col-12 col-lg-6">
             <div class="input-group">
-                <button type="button" class="btn btn-outline-primary" @click="sendOobRequest(modelValue.binary_base64)">
+                <button type="button" class="btn btn-outline-primary" @click="sendOobRequest(modelValue.binary_base64)" :disabled="waitForResponse">
                     Send ESAM Request
                 </button>
             </div>
