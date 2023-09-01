@@ -48,39 +48,38 @@ var newComponent = {
     </div>
 
     <div v-if="!value.program_splice">
-      <div class="border rounded container">
-        <div class="row align-items-center" v-for="(comp, index) in value.components" :key="index">
-          <div class="col-5">
-            <div style="height: 95px;" class="d-flex align-items-center">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">tag</span>
-                </div>
-                <input type="number" class="form-control" v-model="comp.tag" />
-              </div>
-            </div>
-          </div>
-          <div class="col-5">
-            <SpliceTime v-if="!value.splice_immediate" v-model="comp.splice_time" />
-          </div>
-          <div class="col-2">
-            <button type="button" class="btn btn-outline-danger btn-sm" @click="value.components.splice(index, 1);">
-              X
-            </button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2">
-            <button type="button" class="btn btn-outline-primary btn-sm"
-              @click="value.components.push(JSON.parse(JSON.stringify(newComponent)));">+</button>
-          </div>
-          <div class="col-5">
-          </div>
-          <div class="col-5">
-          </div>
-        </div>
+      <div class="border rounded display-block">
+        <table class="table table-bordered">
+          <thead>
+            <th>#</th>
+            <th>tag</th>
+            <th>splice time</th>
+          </thead>
+          <tbody>
+            <tr v-for="(comp, index) in value.components" :key="index">
+              <td>
+                <button type="button" class="btn btn-outline-danger btn-sm" @click="value.components.splice(index, 1);">
+                  X
+                </button>
+              </td>
+              <td><input type="number" class="form-control" v-model="comp.tag" /></td>
+              <td>
+                <SpliceTime v-if="!value.splice_immediate" v-model="comp.splice_time" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button type="button" class="btn btn-outline-primary btn-sm"
+                  @click="value.components.push(JSON.parse(JSON.stringify(newComponent)));">
+                  +
+                </button>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <br />
     </div>
 
     <div v-if="value.program_splice && !value.splice_immediate">
