@@ -36,40 +36,36 @@ var newComponent = {
                     <input class="form-check-input" type="checkbox" v-model="value.program_segmentation_flag">
                     <label class="form-check-label">program_segmentation_flag</label>
                 </div>
-                <div v-if="!value.program_segmentation_flag">
-                    <div class="border rounded">
-                        <table>
-                            <thead>
-                                <th style="width: 45%;">tag</th>
-                                <th style="width: 45%;">pts_offset</th>
-                                <th>delete</th>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(comp, index) in value.components" :key="index">
-                                    <td>
-                                        <input type="number" class="form-control" v-model="comp.tag" />
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" v-model="comp.pts_offset" />
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-danger btn-sm"
-                                            @click="value.components.splice(index, 1);">
-                                            X
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="col-2">
-                                            <button type="button" class="btn btn-outline-primary btn-sm"
-                                                @click="value.components.push(JSON.parse(JSON.stringify(newComponent)));">+</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div v-if="!value.program_segmentation_flag" class="border rounded display-block">
+                    <table class="table table-bordered">
+                        <thead>
+                            <th>#</th>
+                            <th>tag</th>
+                            <th>pts offset</th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(comp, index) in value.components" :key="index">
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                        @click="value.components.splice(index, 1);">
+                                        X
+                                    </button>
+                                </td>
+                                <td><input type="number" class="form-control" v-model="comp.tag" /></td>
+                                <td><input type="number" class="form-control" v-model="comp.pts_offset" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                        @click="value.components.push(JSON.parse(JSON.stringify(newComponent)));">
+                                        +
+                                    </button>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="form-check form-switch">
