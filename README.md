@@ -1,24 +1,30 @@
 # Scte35 Generator
-This project is a GUI for generate SCTE35 binary data.
-* GUI can be accessed at [Scte35 Generator](https://hlitpxu.github.io/scte35_generator/)
+This project is a tool for generate SCTE35 message.
+* public GUI can be accessed at [Scte35 Generator](https://hlitpxu.github.io/scte35_generator/)
+* If you want to use the esam oob sender feature, you need to deploy the service on your local server
 
-## Feature support
+## SCTE35 support
 ### Splice command type
 * Splice Insert
 * Time Signal
 ### Descriptor type
 * Segmentation descriptor
 
+## ESAM OOB support
+### Support basic ESAM OOB request with SCTE35 binary data
+
 ## Developer note
 ### Project setup
 ```
-npm install
+npm run setup
 ```
 
-#### Compiles and hot-reloads for development
+#### Compiles and hot-reloads for development (frontend)
 ```
-npm run serve
+npm run vue
 ```
 
-#### Deploy to github-page
-push or merge new commit to deploy_page branch will trigger github-page deploy automatically
+#### Deploy locally (frontend + backend)
+```
+npm run deploy
+```
