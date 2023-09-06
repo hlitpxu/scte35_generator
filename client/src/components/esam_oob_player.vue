@@ -31,6 +31,7 @@ var oob_request = reactive({
 var waitForResponse = false;
 async function sendOobRequest(base64str) {
     esam_request_response.has_data = false;
+    esam_request_response.has_esam_command = false;
 
     var utc_time = new Date();
     switch (oob_request.time_mode) {
