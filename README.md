@@ -1,9 +1,10 @@
 # Scte35 Generator
-This project is a tool for generate SCTE35 message.
-* public GUI can be accessed at [Scte35 Generator](https://hlitpxu.github.io/scte35_generator/)
+This project is a tool for generating SCTE35 messages.
+* Public GUI can be accessed at [Scte35 Generator](https://hlitpxu.github.io/scte35_generator/)
 * If you want to use the esam oob sender feature, you need to deploy the service on your local server
 
 ## SCTE35 support
+Applicable to ANSI/SCTE 35 2019a specification
 ### Splice command type
 * Splice Insert
 * Time Signal
