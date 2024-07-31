@@ -2,21 +2,19 @@
 import { reactive, ref } from "vue";
 import crc32mpeg2 from 'crc/calculators/crc32mpeg2';
 import {
-    COMMAND_TYPES_VAL,
-    COMMAND_TYPES_VAL_TO_STR,
-    DESCRIPTOR_TYPES_VAL,
-    DESCRIPTOR_VAL_TO_STR,
-    SEGMENTATION_TYPES_VAL_TO_STR,
+    COMMAND_TYPE,
+    DESCRIPTOR_TYPE,
+    SEGMENTATION_TYPE_ID,
 } from './types.ts';
 
 var enable_debug = ref(false);
 var splice_info = reactive({
     splice_command: {
-        type: COMMAND_TYPES_VAL.SPLICE_INSERT,
+        type: COMMAND_TYPE.SPLICE_INSERT,
         data: {},
     },
     new_descriptor: {
-        tag: DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC,
+        tag: DESCRIPTOR_TYPE.SEGMENTATION_DESCIPTOR,
         data: {
             init: false,
         }
@@ -56,12 +54,12 @@ function get_binary(data) {
     var splice_command_length = 0;
     var result = [];
     switch (data.splice_command.type) {
-        case COMMAND_TYPES_VAL.SPLICE_INSERT:
+        case COMMAND_TYPE.SPLICE_INSERT:
             result = SpliceInsert.get_binary(data.splice_command.data);
             splice_command_length = result.length;
             binary.push(...result);
             break;
-        case COMMAND_TYPES_VAL.TIME_SIGNAL:
+        case COMMAND_TYPE.TIME_SIGNAL:
             result = TimeSignal.get_binary(data.splice_command.data);
             splice_command_length = result.length;
             binary.push(...result);
@@ -79,7 +77,7 @@ function get_binary(data) {
     for (var i = 0; i < data.descriptors.length; ++i) {
         var d = data.descriptors[i];
         switch (d.tag) {
-            case DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC:
+            case DESCRIPTOR_TYPE.SEGMENTATION_DESCIPTOR:
                 result = SegmentationDescriptor.get_binary(d.data);
                 desc_length += result.length;
                 binary.push(...result);
@@ -140,17 +138,18 @@ function copy_to_clipboard(text) {
                         </div>
                         <div class="col-8">
                             <select class="form-select form-select" v-model="splice_info.splice_command.type">
-                                <option v-for="type, index in COMMAND_TYPES_VAL" :key="index" :value="type">
-                                    {{ COMMAND_TYPES_VAL_TO_STR[type] }}</option>
+                                <option v-for="type, index in Object.keys(COMMAND_TYPE).filter(key => isNaN(Number(key)))" :key="index" :value="COMMAND_TYPE[type]">
+                                    {{ type.toLowerCase() }}
+                                </option>
                             </select>
                         </div>
                     </div>
                     <!-- command content -->
-                    <div v-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.SPLICE_INSERT">
+                    <div v-if="splice_info.splice_command.type == COMMAND_TYPE.SPLICE_INSERT">
                         <hr />
                         <SpliceInsert v-model="splice_info.splice_command.data" />
                     </div>
-                    <div v-else-if="splice_info.splice_command.type == COMMAND_TYPES_VAL.TIME_SIGNAL">
+                    <div v-else-if="splice_info.splice_command.type == COMMAND_TYPE.TIME_SIGNAL">
                         <hr />
                         <TimeSignal v-model="splice_info.splice_command.data" />
                     </div>
@@ -167,8 +166,8 @@ function copy_to_clipboard(text) {
                         </div>
                         <div class="col-6">
                             <select class="form-select form-select" v-model="splice_info.new_descriptor.tag">
-                                <option v-for="type, index in DESCRIPTOR_TYPES_VAL" :key="index" :value="type">
-                                    {{ DESCRIPTOR_VAL_TO_STR[type] }}</option>
+                                <option v-for="type, index in Object.keys(DESCRIPTOR_TYPE).filter(key => isNaN(Number(key)))" :key="index" :value="DESCRIPTOR_TYPE[type]">
+                                    {{ type.toLowerCase() }}</option>
                             </select>
                         </div>
 
@@ -197,11 +196,11 @@ function copy_to_clipboard(text) {
                                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#descriptorView" @click="sendDesc(splice_info.descriptors[i])"
                                             style="text-align: left;">
-                                            {{ DESCRIPTOR_VAL_TO_STR[d.tag] }}
+                                            {{ DESCRIPTOR_TYPE[d.tag] }}
                                             <br />
                                             <div style="margin-left: 10px; text-align: left;">
-                                                <div v-if="d.tag == DESCRIPTOR_TYPES_VAL.SEGMENTATION_DESC">
-                                                    type_id: {{ SEGMENTATION_TYPES_VAL_TO_STR[d.data.type_id] }}
+                                                <div v-if="d.tag == DESCRIPTOR_TYPE.SEGMENTATION_DESCIPTOR">
+                                                    type_id: {{ SEGMENTATION_TYPE_ID[d.data.type_id] }}
                                                     <br />
                                                     duraion: {{ d.data.duration }}
                                                 </div>
