@@ -138,7 +138,8 @@ function copy_to_clipboard(text) {
                         </div>
                         <div class="col-8">
                             <select class="form-select form-select" v-model="splice_info.splice_command.type">
-                                <option v-for="type, index in Object.keys(COMMAND_TYPE).filter(key => isNaN(Number(key)))" :key="index" :value="COMMAND_TYPE[type]">
+                                <option v-for="type, index in Object.keys(COMMAND_TYPE).filter(key => isNaN(Number(key)))"
+                                    :key="index" :value="COMMAND_TYPE[type]">
                                     {{ type.toLowerCase() }}
                                 </option>
                             </select>
@@ -166,7 +167,9 @@ function copy_to_clipboard(text) {
                         </div>
                         <div class="col-6">
                             <select class="form-select form-select" v-model="splice_info.new_descriptor.tag">
-                                <option v-for="type, index in Object.keys(DESCRIPTOR_TYPE).filter(key => isNaN(Number(key)))" :key="index" :value="DESCRIPTOR_TYPE[type]">
+                                <option
+                                    v-for="type, index in Object.keys(DESCRIPTOR_TYPE).filter(key => isNaN(Number(key)))"
+                                    :key="index" :value="DESCRIPTOR_TYPE[type]">
                                     {{ type.toLowerCase() }}</option>
                             </select>
                         </div>
