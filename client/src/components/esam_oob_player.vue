@@ -1,6 +1,6 @@
 <script setup>
 import { reactive } from 'vue';
-import esamService from '@/services/Esam.js'
+import esamService from '@/services/Esam.ts'
 
 const TIME_MODE = {
     ABSOLUTE: 0,
