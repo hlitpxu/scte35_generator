@@ -1,12 +1,8 @@
 <script setup>
 import {
-    SEGMENTATION_TYPES_VAL,
-    SEGMENTATION_TYPES_VAL_TO_STR,
-    SEGMENTATION_UPID_TYPES_VAL,
-    SEGMENTATION_UPID_TYPES_VAL_TO_STR,
-    SEGMENTATION_UPID_TYPES_VAL_TO_LEN,
-    DEVICE_RESTRICTION_VAL,
-    DEVICE_RESTRICTION_VAL_TO_STR,
+    SEGMENTATION_TYPE_ID,
+    SEGMENTATION_UPID_TYPE,
+    DEVICE_RESTRICTION,
 } from './types.ts';
 
 var newComponent = {
@@ -110,8 +106,11 @@ var newComponent = {
                         </div>
                         <div class="col-6">
                             <select class="form-select form-select" v-model="value.device_restrictions">
-                                <option v-for="val, index in DEVICE_RESTRICTION_VAL" :key="index" :value="val">
-                                    {{ DEVICE_RESTRICTION_VAL_TO_STR[val] }}</option>
+                                <option
+                                    v-for="type, index in Object.keys(DEVICE_RESTRICTION).filter(key => isNaN(Number(key)))"
+                                    :key="index" :value="DEVICE_RESTRICTION[type]">
+                                    {{ type }}
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -123,11 +122,13 @@ var newComponent = {
                     </div>
                     <div class="col-8">
                         <select class="form-select form-select" v-model="value.upid_type">
-                            <option v-for="val, index in SEGMENTATION_UPID_TYPES_VAL" :key="index" :value="val">
-                                {{ SEGMENTATION_UPID_TYPES_VAL_TO_STR[val] }}</option>
+                            <option
+                                v-for="type, index in Object.keys(SEGMENTATION_UPID_TYPE).filter(key => isNaN(Number(key)))"
+                                :key="index" :value="SEGMENTATION_UPID_TYPE[type]">
+                                {{ type.toLowerCase() }}</option>
                         </select>
                     </div>
-                    <div v-if="value.upid_type != SEGMENTATION_UPID_TYPES_VAL.NOT_USED" class="col-12">
+                    <div v-if="value.upid_type != SEGMENTATION_UPID_TYPE.NOT_USED" class="col-12">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">upid</span>
@@ -143,8 +144,9 @@ var newComponent = {
         </div>
         <div class="col-7">
             <select class="form-select form-select" v-model="value.type_id">
-                <option v-for="type, index in SEGMENTATION_TYPES_VAL" :key="index" :value="type">
-                    {{ SEGMENTATION_TYPES_VAL_TO_STR[type] }}</option>
+                <option v-for="type_id, index in Object.keys(SEGMENTATION_TYPE_ID).filter(key => isNaN(Number(key)))"
+                    :key="index" :value="SEGMENTATION_TYPE_ID[type_id]">
+                    {{ type_id.toLowerCase() }}</option>
             </select>
         </div>
 
@@ -171,10 +173,10 @@ export default {
                     v.web_delivery_allowed_flag = false;
                     v.no_regional_blackout_flag = false;
                     v.archive_allowed_flag = false;
-                    v.device_restrictions = DEVICE_RESTRICTION_VAL.NONE;
+                    v.device_restrictions = DEVICE_RESTRICTION.NONE;
                     v.components = [];
                     v.duration = 0;
-                    v.upid_type = SEGMENTATION_UPID_TYPES_VAL.NOT_USED;
+                    v.upid_type = SEGMENTATION_UPID_TYPE.NOT_USED;
                     v.upid = "";
                     v.type_id = 0;
                     v.segment_num = 0;
@@ -252,9 +254,9 @@ export default {
                 rv[offset + 4] |= (data.duration & 0xFF);
             }
 
-            let upid_length = SEGMENTATION_UPID_TYPES_VAL_TO_LEN[data.upid_type];
+            let upid_length = SEGMENTATION_UPID_TYPE.lenth_limit(data.upid_type)
             let upid_data = data.upid;
-            if (upid_length >= 0) {
+            if (upid_length != undefined && upid_length >= 0) {
                 if (upid_data.length < upid_length) {
                     upid_data = data.upid.padStart(upid_length, 0x00);
                 } else {
