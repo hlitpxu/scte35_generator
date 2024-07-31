@@ -7,10 +7,6 @@
     "deploy": "npm --prefix client run build && npm --prefix server run start ",
     "setup": "npm install && npm --prefix client install && npm --prefix server install"
   },
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
   "eslintConfig": {
     "root": true,
     "env": {
