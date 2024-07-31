@@ -150,6 +150,38 @@ var newComponent = {
             </select>
         </div>
 
+        <div v-if="SEGMENTATION_TYPE_ID.get_segment_num(value.type_id) != SEGMENTATION_TYPE_ID.SEGMENT_NUM.ZERO
+            && SEGMENTATION_TYPE_ID.get_segment_num(value.type_id) != SEGMENTATION_TYPE_ID.SEGMENT_NUM.ONE"
+            class="col-12">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">segment_num</span>
+                </div>
+                <input type="text" class="form-control" v-model="value.segment_num" />
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">segments_expcted</span>
+                </div>
+                <input type="text" class="form-control" v-model="value.segments_expcted" />
+            </div>
+        </div>
+
+        <div v-if="SEGMENTATION_TYPE_ID.sub_segment_required(value.type_id)" class="col-12">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">sub_segment_num</span>
+                </div>
+                <input type="text" class="form-control" v-model="value.sub_segment_num" />
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">sub_segments_expcted</span>
+                </div>
+                <input type="text" class="form-control" v-model="value.sub_segments_expcted" />
+            </div>
+        </div>
+
     </div>
 </template>
     
@@ -273,17 +305,25 @@ export default {
             // rv.push(...upid_data);
 
             rv.push(data.type_id & 0xFF);
-            rv.push(0x01, 0x01);
 
-            switch (data.type_id) {
-                case 0x34:
-                case 0x36:
-                case 0x38:
-                case 0x3A:
+            // segment num
+            switch (SEGMENTATION_TYPE_ID.get_segment_num(data.type_id)) {
+                case SEGMENTATION_TYPE_ID.SEGMENT_NUM.ZERO:
                     rv.push(0x00, 0x00);
                     break;
-                default:
+                case SEGMENTATION_TYPE_ID.SEGMENT_NUM.ONE:
+                    rv.push(0x01, 0x01);
                     break;
+                case SEGMENTATION_TYPE_ID.SEGMENT_NUM.POSITIVE:
+                case SEGMENTATION_TYPE_ID.SEGMENT_NUM.NON_NEGATIVE:
+                    rv.push(data.segment_num & 0xFF);
+                    rv.push(data.segments_expcted & 0xFF);
+                    break;
+            }
+
+            if (SEGMENTATION_TYPE_ID.sub_segment_required(data.type_id)) {
+                rv.push(data.sub_segment_num & 0xFF);
+                rv.push(data.sub_segments_expcted & 0xFF);
             }
 
             rv[1] |= (rv.length - 2) & 0xFF;
