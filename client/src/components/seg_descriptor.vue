@@ -157,28 +157,28 @@ var newComponent = {
                 <div class="input-group-prepend">
                     <span class="input-group-text">segment_num</span>
                 </div>
-                <input type="text" class="form-control" v-model="value.segment_num" />
+                <input type="number" class="form-control" v-model="value.segment_num" />
             </div>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">segments_expcted</span>
                 </div>
-                <input type="text" class="form-control" v-model="value.segments_expcted" />
+                <input type="number" class="form-control" v-model="value.segments_expcted" />
             </div>
         </div>
 
         <div v-if="SEGMENTATION_TYPE_ID.sub_segment_required(value.type_id)" class="col-12">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">sub_segment_num</span>
+                    <span class="form-control">sub_segment_num</span>
                 </div>
-                <input type="text" class="form-control" v-model="value.sub_segment_num" />
+                <input type="number" class="form-control" v-model="value.sub_segment_num" />
             </div>
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">sub_segments_expcted</span>
+                    <span class="form-control">sub_segments_expcted</span>
                 </div>
-                <input type="text" class="form-control" v-model="value.sub_segments_expcted" />
+                <input type="number" class="form-control" v-model="value.sub_segments_expcted" />
             </div>
         </div>
 
